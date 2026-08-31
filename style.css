@@ -2,3 +2,25 @@
 
 /* acabamento premium */
 body{cursor:none}.noise{position:fixed;inset:0;pointer-events:none;z-index:20;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}.cursor-ring,.cursor-dot{position:fixed;pointer-events:none;z-index:100;width:28px;height:28px;border:1px solid var(--orange);border-radius:50%;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;mix-blend-mode:multiply}.cursor-dot{width:5px;height:5px;border:0;background:var(--orange);transition:none}.page-progress{position:fixed;z-index:101;top:0;left:0;width:0;height:3px;background:var(--orange);box-shadow:0 0 12px #e9633f;transition:width .1s}.hero{position:relative;isolation:isolate}.hero:before{content:'✦';position:absolute;top:45px;right:8%;font-size:240px;line-height:1;color:#e5f3fc;z-index:-1;transform:rotate(15deg)}.hero-stamp{position:absolute;top:50px;left:34px;border:1px solid var(--orange);color:var(--orange);font:700 9px/1.4 var(--serif);letter-spacing:1.5px;padding:8px 9px;transform:rotate(-8deg);text-align:center}.hero-stamp span{font-size:13px}.photo-frame{transition:transform .15s ease-out}.photo-frame:after{content:'';position:absolute;inset:-10px;border:1px solid #76bff255;transform:rotate(-5deg);z-index:-1}.photo-glow{position:absolute;inset:-70px;background:radial-gradient(circle,#c8b9ff88 0,transparent 68%);z-index:-2;filter:blur(15px)}.nav-cta,.button,.project-card,.skills-grid article{transition:transform .25s cubic-bezier(.23,1,.32,1),box-shadow .25s ease,background .25s ease}.nav-cta:hover{transform:translateY(-3px);box-shadow:0 7px 0 var(--orange)}.section-label{position:relative}.section-label:after{content:'';display:inline-block;width:35px;height:1px;background:var(--orange);vertical-align:middle;margin-left:10px}.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.23,1,.32,1)}.reveal.visible{opacity:1;transform:none}.reveal-group>*{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.23,1,.32,1)}.reveal-group.visible>*{opacity:1;transform:none}.reveal-group.visible>*:nth-child(2){transition-delay:.12s}.back-top{position:fixed;bottom:22px;right:25px;width:38px;height:38px;border:1px solid var(--ink);border-radius:50%;background:var(--paper);color:var(--ink);font-size:19px;cursor:none;opacity:0;transform:translateY(15px);transition:.25s;z-index:10}.back-top.show{opacity:1;transform:none}.back-top:hover{background:var(--orange);color:#fff;border-color:var(--orange)}@media(max-width:800px){body{cursor:auto}.cursor-ring,.cursor-dot{display:none}.hero:before{font-size:150px;top:220px;right:2%}.hero-stamp{top:26px;left:auto;right:24px}.photo-frame:after{display:none}}@media(prefers-reduced-motion:reduce){.marquee div{animation:none}.reveal,.reveal-group>*{transition:none}.photo-frame{transform:rotate(4deg)!important}}
+
+
+/* leitura e ferramentas */
+body{font-size:17px}
+.hero-text{font-size:17px;line-height:1.8;max-width:520px}
+.hero h1{line-height:1.02}
+.section-label{font-size:12px;letter-spacing:2px}
+.about-text p{font-size:16px;line-height:1.9}
+.skills-heading p,.projects-heading p{font-size:15px;line-height:1.8;max-width:360px}
+.skills-grid{gap:24px}
+.skills-grid article{padding:30px;min-height:275px;border:1px solid rgba(24,50,74,.08);border-radius:18px;box-shadow:0 10px 24px rgba(57,120,165,.08)}
+.skills-grid h3{font-size:25px;margin:28px 0 13px}
+.skills-grid p{font-size:15px;line-height:1.75;max-width:280px}
+.skill-tags{gap:9px;margin-top:26px}
+.skill-tags span{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:8px 11px;background:#fff;border:1px solid rgba(24,50,74,.1);color:var(--ink);box-shadow:0 3px 8px rgba(57,120,165,.06)}
+.skill-tags i{font-size:18px;line-height:1}
+.projects-heading h2{font-size:clamp(40px,5vw,64px)}
+.project-info p{font-size:15px;line-height:1.75}
+.project-type{font-size:11px;letter-spacing:1.5px}
+.project-info h3{font-size:29px}
+.contact-section h2{line-height:1.05}
+@media(max-width:800px){body{font-size:16px}.hero-text{font-size:16px}.skills-grid article{min-height:0;padding:25px}.skills-grid p{font-size:14px}.skill-tags span{font-size:11px}.section-label{font-size:11px}.about-text p{font-size:15px}}
