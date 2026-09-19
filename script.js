@@ -62,3 +62,26 @@ if (tilt && window.matchMedia('(pointer:fine)').matches) {
   });
   tilt.addEventListener('pointerleave', () => { tilt.style.transform = 'rotate(4deg)'; });
 }
+
+const filterButtons = [...document.querySelectorAll('.filter-button')];
+const projectCards = [...document.querySelectorAll('.interactive-projects .project-card')];
+const emptyProjects = document.querySelector('.project-empty');
+
+filterButtons.forEach((button) => button.addEventListener('click', () => {
+  const filter = button.dataset.filter;
+  filterButtons.forEach((item) => item.classList.toggle('is-active', item === button));
+  let visible = 0;
+  projectCards.forEach((card) => {
+    const matches = filter === 'all' || card.dataset.category === filter;
+    card.classList.toggle('is-hidden', !matches);
+    if (matches) visible += 1;
+  });
+  if (emptyProjects) emptyProjects.hidden = visible !== 0;
+}));
+
+document.querySelectorAll('.project-expand').forEach((button) => button.addEventListener('click', () => {
+  const card = button.closest('.project-card');
+  const expanded = card.classList.toggle('is-expanded');
+  button.setAttribute('aria-expanded', String(expanded));
+  button.firstChild.textContent = expanded ? 'Fechar detalhes ' : 'Ver detalhes ';
+}));
