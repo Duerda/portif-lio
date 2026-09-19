@@ -22,3 +22,52 @@
 .interactive-projects{grid-template-columns:1fr;gap:30px}.interactive-projects .project-card{display:grid;grid-template-columns:minmax(0,.98fr) minmax(0,1.02fr);grid-template-areas:"preview details" "preview more" "preview expand";min-height:390px;border-radius:24px}.interactive-projects .project-preview{grid-area:preview;height:auto!important;min-height:390px;border-radius:23px 0 0 23px}.interactive-projects .project-details{grid-area:details;display:flex;align-items:center;padding:38px 42px 22px}.interactive-projects .project-details h3{font-size:39px;margin:13px 0 10px}.interactive-projects .project-details p{max-width:520px;font-size:15px;line-height:1.8}.interactive-projects .project-details>a{font-size:22px;align-self:flex-start;margin-top:4px}.interactive-projects .project-tags{margin-top:22px}.interactive-projects .project-tags span{padding:6px 10px}.interactive-projects .project-more{grid-area:more;padding:0 42px 20px;border-top:0}.interactive-projects .project-more>a{margin-top:16px!important}.interactive-projects .project-expand{grid-area:expand;padding:15px 42px 22px}.interactive-projects .design-mock{width:78%;min-height:225px}.interactive-projects .app-mock{width:78%;min-height:205px}.interactive-projects .mock-dashboard{width:70%;height:210px}.interactive-projects .cafe-mock{width:76%;height:190px}.interactive-projects .project-card.is-expanded{min-height:520px}.interactive-projects .project-card.is-expanded .project-details{padding-bottom:14px}.interactive-projects .project-card.is-expanded .project-more{padding-bottom:22px}.interactive-projects .project-card[data-category="design"] .project-preview{background-color:var(--blue-100)}
 @media(max-width:900px){.interactive-projects .project-card{grid-template-columns:1fr;grid-template-areas:"preview" "details" "more" "expand";min-height:0}.interactive-projects .project-preview{min-height:320px;height:320px!important;border-radius:23px 23px 0 0}.interactive-projects .project-details{padding:28px 26px 20px}.interactive-projects .project-details h3{font-size:32px}.interactive-projects .project-details p{font-size:14px}.interactive-projects .project-more{padding:0 26px 18px}.interactive-projects .project-expand{padding:14px 26px 20px}.interactive-projects .design-mock{min-height:190px}.interactive-projects .mock-dashboard{height:180px}.interactive-projects .cafe-mock{height:165px}}
 @media(max-width:560px){.interactive-projects .project-preview{min-height:250px;height:250px!important}.interactive-projects .project-details h3{font-size:29px}.interactive-projects .project-details>a{font-size:19px}.interactive-projects .project-details{padding:24px 22px 18px}.interactive-projects .project-more{padding-inline:22px}.interactive-projects .project-expand{padding-inline:22px}}
+
+
+/* Brand-aware project system: each case study keeps its own visual DNA. */
+.project-card{--brand-ink:var(--navy);--brand-accent:var(--blue-700);--brand-surface:#fff;--brand-line:var(--line);border-color:var(--brand-line);background:var(--brand-surface)}
+.project-card .project-details small,.project-card .project-tags span{color:var(--brand-accent)}
+.project-card .project-tags span{border-color:color-mix(in srgb,var(--brand-accent) 26%,transparent);background:color-mix(in srgb,var(--brand-accent) 8%,white)}
+.project-card .project-details h3{color:var(--brand-ink)}
+.project-card[data-project="universyn"]{--brand-ink:#FFE38A;--brand-accent:#62E9E5;--brand-surface:#080B18;--brand-line:#323b78;background:#080B18;color:#e8ecff;box-shadow:0 14px 0 #121943,0 24px 52px rgba(8,11,24,.18)}
+.project-card[data-project="universyn"] .project-details p,.project-card[data-project="universyn"] .project-details>a{color:#b8c0e1}
+.project-card[data-project="universyn"] .project-preview{background:linear-gradient(145deg,#080B18,#121943)}
+.project-card[data-project="universyn"] .project-tags span{background:#121943;color:#62E9E5;border-color:#62E9E555}
+.project-card[data-project="cafeteria"]{--brand-ink:#3E2723;--brand-accent:#B86B45;--brand-surface:#FFF5E6;--brand-line:#ead4bd;background:#FFF5E6}
+.project-card[data-project="cafeteria"] .project-preview{background:linear-gradient(145deg,#4E342E,#B86B45)}
+.project-card[data-project="cafeteria"] .project-tags span{background:#fffbf4}
+.project-card[data-project="siimpla"]{--brand-ink:#000;--brand-accent:#4A8DE0;--brand-surface:#fff;--brand-line:#d9e6f4}
+.project-card[data-project="siimpla"] .project-preview{background:linear-gradient(145deg,#f5faff,#dbeaff)}
+.project-card[data-project="checknet"]{--brand-ink:#4F416D;--brand-accent:#7963A8;--brand-surface:#FAFBFE;--brand-line:#ddd5ec;background:#FAFBFE}
+.project-card[data-project="checknet"] .project-preview{background:linear-gradient(145deg,#C8BDD8,#F5F1FA)}
+.project-card[data-project="nutrify"]{--brand-ink:#111;--brand-accent:#05AA50;--brand-surface:#f9fbf4;--brand-line:#d9eaa8;background:#f9fbf4}
+.project-card[data-project="nutrify"] .project-preview{background:linear-gradient(135deg,#B7DA57,#eaf6ba)}
+.project-card[data-project="tcchat"],.project-card[data-project="tcchat-design"]{--brand-ink:#102b43;--brand-accent:#2478ae;--brand-surface:#f4faff;--brand-line:#cfeaff}
+.project-card[data-project="tcchat"] .project-preview,.project-card[data-project="tcchat-design"] .project-preview{background:linear-gradient(145deg,#dfeeff,#eef9ff)}
+.project-card[data-project="universyn"] .project-expand,.project-card[data-project="universyn"] .project-more{border-color:#323b78}
+.project-card[data-project="universyn"] .project-expand{color:#FFE38A}
+.project-card[data-project="universyn"] .project-more{background:#0D1230}
+.project-card[data-project="universyn"] .detail-grid span{color:#62E9E5}
+.project-card[data-project="universyn"] .detail-grid p{color:#c6cbea}
+.project-card[data-project="universyn"] .project-expand:hover{background:#FF76B7;color:#080B18}
+.project-card[data-project="checknet"] .preview-chip{background:#4F416D;color:#fff}
+.project-card[data-project="nutrify"] .preview-chip{background:#05AA50;color:#fff}
+.project-card[data-project="cafeteria"] .preview-chip{background:#4E342E;color:#FFF5E6}
+.project-card[data-project="siimpla"] .preview-chip{background:#4A8DE0;color:#fff}
+.project-card[data-project="universyn"] .preview-chip{background:#FF76B7;color:#080B18}
+.project-card[data-project="universyn"] .project-details small{color:#62E9E5}
+.project-card[data-project="universyn"] .project-details>a{color:#FFE38A}
+.project-card[data-project="universyn"] .project-details>a:hover{color:#62E9E5}
+.project-card[data-project="cafeteria"] .project-details h3{font-family:var(--serif)}
+.project-card[data-project="nutrify"] .design-mock{background:#fff;box-shadow:10px 14px 0 rgba(5,170,80,.2)}
+.project-card[data-project="nutrify"] .design-mock strong{color:#111}
+.project-card[data-project="nutrify"] .design-label{color:#05AA50}
+.project-card .project-real-preview img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .55s var(--ease),filter .3s ease}
+.project-card:hover .project-real-preview img{transform:scale(1.035);filter:saturate(1.05)}
+.project-card .preview-chip{position:absolute;right:16px;bottom:15px;z-index:1;padding:7px 10px;border-radius:999px;font-size:9px;letter-spacing:1.2px;font-weight:800;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.projects-heading h2 em{color:#4A8DE0}
+@media(max-width:900px){.project-card[data-project="universyn"]{box-shadow:0 10px 0 #121943,0 18px 40px rgba(8,11,24,.14)}}
+
+
+/* First viewport should never depend on scroll timing. */
+.hero .reveal{opacity:1;transform:none}
