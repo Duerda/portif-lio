@@ -130,3 +130,15 @@ body{background:var(--blue-paper)}body:before{background:radial-gradient(circle 
 .project-explorer{border-block:0;padding:12px 16px;margin-left:-16px;margin-right:-16px;border-radius:999px}.filter-button{border-radius:999px;padding:9px 15px}.project-card{overflow:hidden;box-shadow:0 14px 34px rgba(45,125,165,.09)}.project-card:hover{box-shadow:0 22px 45px rgba(45,125,165,.16)}.project-preview{background:#eaf7ff!important}.project-card.featured .project-preview{height:450px}.project-details h3{color:#102b43}.project-tags span{border-radius:999px}.project-more{background:linear-gradient(180deg,#fff,#f7fcff)}.project-expand{color:#397eaa}.contact-card{border-radius:22px;background:linear-gradient(135deg,#102b43,#174d78);box-shadow:0 20px 50px rgba(16,43,67,.22)}.contact-actions .button-dark{border-radius:999px;box-shadow:5px 6px 0 #8bd0f2}.contact-actions .button-light{border-radius:999px}.back-top{border-radius:999px;box-shadow:0 7px 20px rgba(30,105,145,.15)}
 .case-panel{border-radius:22px;box-shadow:0 30px 90px rgba(7,28,50,.25)}.case-close{border-radius:999px}.case-hero{border-radius:22px 22px 0 0}.case-hero-image{background:linear-gradient(145deg,#dff3ff,#f7fcff)}.case-hero-copy h2{letter-spacing:-3px}.case-statement{border-radius:12px}.case-tags span{border-radius:999px}.case-bottom>div{border-radius:12px;background:#fbfeff}
 @media(max-width:760px){.hero{padding-top:100px}.project-explorer{margin-left:0;margin-right:0;padding:11px 0}.project-card,.tool,.process-card{border-radius:14px}.project-card.featured .project-preview{height:270px}.contact-card{border-radius:18px}}
+
+/* Personal signature mark */
+.logo{gap:10px}.logo .brand-mark{width:43px;height:43px;display:block;filter:drop-shadow(4px 5px 0 rgba(139,208,242,.45))}.logo .brand-name{font:700 22px var(--serif);color:var(--blue-ink);letter-spacing:-.5px}.logo .brand-name .dot{color:var(--blue-mid);font:700 28px var(--serif)}
+@media(max-width:760px){.logo .brand-mark{width:38px;height:38px}.logo .brand-name{font-size:20px}}
+
+
+/* Fix legacy logo selector so the new monogram remains clean. */
+.logo>span:first-child{display:inline;color:inherit;width:auto;height:auto;margin:0;background:none;box-shadow:none;transform:none;border-radius:0;font:inherit}.logo .brand-name{display:inline;color:var(--blue-ink);background:none!important;box-shadow:none!important;transform:none!important;width:auto!important;height:auto!important;margin:0!important;border-radius:0!important}
+
+
+/* Definitive brand lockup reset */
+.logo .brand-name{all:unset!important;display:inline!important;font:700 22px var(--serif)!important;color:var(--blue-ink)!important;letter-spacing:-.5px!important}.logo .brand-name .dot{all:unset!important;color:var(--blue-mid)!important;font:700 28px var(--serif)!important}
