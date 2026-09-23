@@ -1,5 +1,5 @@
 const menuButton = document.querySelector('.menu-toggle');
-const nav = document.querySelector('#main-nav');
+const nav = document.querySelector('#menu');
 
 menuButton?.addEventListener('click', () => {
   const open = nav?.classList.toggle('open');
@@ -41,7 +41,7 @@ if ('IntersectionObserver' in window) {
   document.querySelectorAll('.reveal').forEach((item) => item.classList.add('visible'));
 }
 
-const pageProgress = document.querySelector('.page-progress');
+const pageProgress = document.querySelector('.progress');
 const backTop = document.querySelector('.back-top');
 function updateScroll() {
   const max = document.documentElement.scrollHeight - window.innerHeight;
