@@ -55,3 +55,8 @@
 @media(max-width:900px){.project-card:nth-child(1),.project-card:nth-child(2){grid-column:auto;grid-row:auto}.project-card:nth-child(1) .project-media,.project-card:nth-child(2) .project-media{min-height:250px}.project-card:nth-child(1) .project-info,.project-card:nth-child(2) .project-info{min-height:0}}
 
 @media(min-width:901px){.project-grid.interactive-projects>.project-card:nth-child(1),.project-grid.interactive-projects>.project-card:nth-child(2){grid-column:span 6!important;grid-row:auto!important}.project-grid.interactive-projects>.project-card:nth-child(1) .project-media,.project-grid.interactive-projects>.project-card:nth-child(2) .project-media{height:320px;min-height:320px}}
+
+/* Larger case-study CTA */
+.project-expand{min-height:58px;padding:18px 24px;font-size:12px;letter-spacing:.8px;text-transform:uppercase}
+.project-expand span{font-size:22px;line-height:1}
+@media(max-width:520px){.project-expand{min-height:54px;padding:16px 18px;font-size:11px}.project-expand span{font-size:20px}}
