@@ -44,3 +44,14 @@
 .case-statement>span,.case-grid>div>span,.case-bottom>div>span{color:var(--blue);font-weight:500}
 .case-actions .btn.solid{background:var(--blue);box-shadow:5px 5px 0 var(--yellow)}
 @media(max-width:900px){.projects .section-top{margin-bottom:38px}.projects .section-top .side-note{max-width:145px}.project-expand:after{display:none}.case-hero-copy{border-left:0;border-top:1px solid var(--line)}}
+
+/* Featured projects: give Universyn and Cafeteria equal visual weight */
+.project-card:nth-child(1),.project-card:nth-child(2){grid-column:span 6;grid-row:auto;transform:none}
+.project-card:nth-child(1) .project-media,.project-card:nth-child(2) .project-media{min-height:320px}
+.project-card:nth-child(1) .project-media img,.project-card:nth-child(2) .project-media img{object-position:center;filter:saturate(.85) contrast(1.02)}
+.project-card:nth-child(1) .project-info,.project-card:nth-child(2) .project-info{min-height:330px}
+.project-card:nth-child(1) .project-expand,.project-card:nth-child(2) .project-expand{background:var(--blue);color:#fff}
+.project-card:nth-child(1) .project-expand:hover,.project-card:nth-child(2) .project-expand:hover{background:var(--deep)}
+@media(max-width:900px){.project-card:nth-child(1),.project-card:nth-child(2){grid-column:auto;grid-row:auto}.project-card:nth-child(1) .project-media,.project-card:nth-child(2) .project-media{min-height:250px}.project-card:nth-child(1) .project-info,.project-card:nth-child(2) .project-info{min-height:0}}
+
+@media(min-width:901px){.project-grid.interactive-projects>.project-card:nth-child(1),.project-grid.interactive-projects>.project-card:nth-child(2){grid-column:span 6!important;grid-row:auto!important}.project-grid.interactive-projects>.project-card:nth-child(1) .project-media,.project-grid.interactive-projects>.project-card:nth-child(2) .project-media{height:320px;min-height:320px}}
