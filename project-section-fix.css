@@ -18,3 +18,29 @@
 .project-go:focus-visible,.filter-button:focus-visible,.project-expand:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
 @media(max-width:900px){.project-overview{grid-template-columns:repeat(3,1fr)}.project-overview>div{min-height:96px;padding:14px 10px}.project-overview strong{font-size:30px}.project-overview span:not(.mono){font-size:8px}.project-overview .overview-note{grid-column:1/-1;border-top:1px solid var(--line);border-right:0;min-height:86px}.project-overview .overview-note p{max-width:none;font-size:17px}.case-columns{gap:10px}.case-columns span{font-size:10px}}
 @media(max-width:520px){.project-overview{grid-template-columns:1fr 1fr}.project-overview>div:nth-child(3){grid-column:1/-1;border-top:1px solid var(--line);border-right:0}.project-overview strong{font-size:34px}.case-columns{grid-template-columns:1fr}.case-columns>div+div{padding-top:10px;border-top:1px dashed var(--line)}}
+
+/* Projects: alignment and case-study emphasis */
+.projects .section-top{align-items:center;min-height:34px;margin-bottom:52px}
+.projects .section-top>span:first-child{transform:none;border-radius:999px;padding:8px 13px;background:var(--yellow);color:var(--deep);line-height:1}
+.projects .section-top .side-note{line-height:1.35}
+.projects-intro{margin-top:0}
+.project-card{border-color:#d6ecec;box-shadow:9px 11px 0 #acdbe0}
+.project-card:focus-within{outline:3px solid var(--yellow);outline-offset:5px}
+.project-card .project-kind{display:inline-flex;align-items:center;gap:7px}
+.project-card .project-kind:before{content:'✦';font-size:11px;color:var(--yellow)}
+.project-card .project-info h3{letter-spacing:-.6px}
+.project-more{background:linear-gradient(180deg,#f7ffff 0%,#e6f5f4 100%);border-top:2px solid var(--sky);padding-top:4px}
+.project-more .detail-grid>div{background:#fff;border:1px solid #d6ecec;border-left:3px solid var(--blue);padding:12px 12px 11px;box-shadow:3px 3px 0 #d9eff0}
+.project-more .detail-grid b{letter-spacing:1px}
+.project-more>a{display:inline-flex;padding:9px 11px;background:var(--deep);color:#fff;border-radius:3px;transition:.2s}
+.project-more>a:hover{background:var(--blue);transform:translateY(-2px)}
+.project-expand{position:relative;background:var(--deep);color:#fff;font-weight:500;letter-spacing:.35px;padding:15px 23px}
+.project-expand:after{content:'ESTUDO DE CASO';position:absolute;right:43px;top:50%;transform:translateY(-50%);color:var(--yellow);font-size:8px;letter-spacing:1.2px}
+.project-expand:hover{background:var(--blue)}
+.case-panel{border:3px solid #fff;border-radius:20px;box-shadow:15px 16px 0 var(--yellow)}
+.case-hero-copy{border-left:1px solid var(--line)}
+.case-hero-copy h2{color:var(--deep)}
+.case-statement{border-left:5px solid var(--blue);box-shadow:5px 5px 0 var(--sky)}
+.case-statement>span,.case-grid>div>span,.case-bottom>div>span{color:var(--blue);font-weight:500}
+.case-actions .btn.solid{background:var(--blue);box-shadow:5px 5px 0 var(--yellow)}
+@media(max-width:900px){.projects .section-top{margin-bottom:38px}.projects .section-top .side-note{max-width:145px}.project-expand:after{display:none}.case-hero-copy{border-left:0;border-top:1px solid var(--line)}}
