@@ -110,29 +110,57 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape' && mo
 
 
 
-/* SNAKE — mini game de portfolio */
+/* DRESS UP — Vista a Dev, mini game de portfolio */
 (() => {
-  const canvas = document.querySelector('#snake-canvas');
-  const start = document.querySelector('.game-start');
-  if (!canvas || !start) return;
+  const canvas = document.querySelector('#dressup-canvas');
+  const buttons = [...document.querySelectorAll('.outfit-button')];
+  if (!canvas || !buttons.length) return;
   const ctx = canvas.getContext('2d');
-  const scoreEl = document.querySelector('#game-score');
-  const timeEl = document.querySelector('#game-time');
+  ctx.imageSmoothingEnabled = false;
+  const lookEl = document.querySelector('#game-look');
   const messageEl = document.querySelector('#game-message');
-  const cell = 20, cols = 36, rows = 20;
-  let snake, food, direction, nextDirection, score, running, timer, loop;
-  const words=['curiosa','criativa','dedicada','atenta','aprendiz','autoral','corajosa','em movimento'];
-  const placeFood=()=>{let p; do {p={x:Math.floor(Math.random()*cols),y:Math.floor(Math.random()*rows)};} while(snake.some(part=>part.x===p.x&&part.y===p.y)); return p;};
-  const drawStar=(x,y)=>{ctx.save();ctx.translate(x*cell+cell/2,y*cell+cell/2);ctx.fillStyle='#fff1a4';ctx.shadowColor='#fff';ctx.shadowBlur=9;ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=i%2?5:9;const px=Math.cos(a)*r,py=Math.sin(a)*r;i?ctx.lineTo(px,py):ctx.moveTo(px,py);}ctx.closePath();ctx.fill();ctx.restore();};
-  const draw=()=>{const g=ctx.createLinearGradient(0,0,720,400);g.addColorStop(0,'#d9f1f2');g.addColorStop(1,'#8fc9d6');ctx.fillStyle=g;ctx.fillRect(0,0,720,400);ctx.strokeStyle='#ffffff26';ctx.lineWidth=1;for(let x=0;x<=720;x+=cell){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,400);ctx.stroke();}for(let y=0;y<=400;y+=cell){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(720,y);ctx.stroke();}drawStar(food.x,food.y);snake.forEach((part,i)=>{ctx.fillStyle=i===0?'#1d5688':'#4b91a8';ctx.beginPath();ctx.roundRect(part.x*cell+2,part.y*cell+2,cell-4,cell-4,i===0?7:5);ctx.fill();if(i===0){ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(part.x*cell+7,part.y*cell+7,2,0,Math.PI*2);ctx.arc(part.x*cell+13,part.y*cell+7,2,0,Math.PI*2);ctx.fill();}});};
-  const finish=won=>{running=false;clearInterval(timer);cancelAnimationFrame(loop);messageEl.textContent=won?'recorde! a cobrinha encontrou todas as palavras.':'a cobrinha bateu — tente de novo e supere seu recorde.';start.textContent=won?'jogar novamente ↗':'tentar novamente ↗';draw();};
-  const tick=()=>{if(!running)return;direction=nextDirection;const head={x:snake[0].x+direction.x,y:snake[0].y+direction.y};if(head.x<0||head.y<0||head.x>=cols||head.y>=rows||snake.some((p,i)=>i>0&&p.x===head.x&&p.y===head.y)){finish(false);return;}snake.unshift(head);if(head.x===food.x&&head.y===food.y){score++;scoreEl.textContent=`${score} / 8`;messageEl.textContent=`${words[Math.min(score-1,words.length-1)]} — essa também combina com você.`;if(score>=8){finish(true);return;}food=placeFood();}else snake.pop();draw();loop=requestAnimationFrame(()=>setTimeout(tick,105));};
-  const begin=()=>{clearInterval(timer);snake=[{x:18,y:10},{x:17,y:10},{x:16,y:10}];food=placeFood();direction={x:1,y:0};nextDirection={x:1,y:0};score=0;running=true;scoreEl.textContent='0 / 8';timeEl.textContent='30s';messageEl.textContent='colecione as estrelas e cuide das curvas.';start.textContent='reiniciar partida ↗';timer=setInterval(()=>{const n=parseInt(timeEl.textContent)-1;timeEl.textContent=`${n}s`;if(n<=0)finish(false);},1000);tick();};
-  const setDirection=(x,y)=>{if(direction.x+x!==0||direction.y+y!==0)nextDirection={x,y};};
-  start.addEventListener('click',begin);window.addEventListener('keydown',e=>{if(e.key==='ArrowUp'||e.key==='w')setDirection(0,-1);if(e.key==='ArrowDown'||e.key==='s')setDirection(0,1);if(e.key==='ArrowLeft'||e.key==='a')setDirection(-1,0);if(e.key==='ArrowRight'||e.key==='d')setDirection(1,0);});
-  snake=[{x:18,y:10},{x:17,y:10},{x:16,y:10}];food={x:27,y:10};direction={x:1,y:0};draw();
+  let look = 'basic';
+  let frame = 0;
+  const looks = {
+    basic: {name:'básica', top:'#fffdf8', shadow:'#d8e9e7', bottom:'#d9edf0', accent:'#3e8ba8', message:'branquinha, simples e pronta para criar.'},
+    sky: {name:'céu', top:'#a9dce5', shadow:'#70b8c6', bottom:'#f7fbfa', accent:'#3e8ba8', message:'um look leve para ter ideias nas nuvens.'},
+    lilac: {name:'lilás', top:'#d8c8ec', shadow:'#aa8fc9', bottom:'#f6e6ef', accent:'#785a9a', message:'delicada, criativa e com um toque de magia.'},
+    sun: {name:'sol', top:'#f6d67d', shadow:'#d9aa3e', bottom:'#fff3c4', accent:'#be8125', message:'energia de quem aprende fazendo.'},
+    party: {name:'festinha', top:'#f5b7c7', shadow:'#d77b9a', bottom:'#c8d9ef', accent:'#aa4d78', message:'um look fofo para comemorar cada conquista.'}
+  };
+  const rect = (x,y,w,h,color) => { ctx.fillStyle=color; ctx.fillRect(x,y,w,h); };
+  const draw = () => {
+    const outfit = looks[look]; const t = frame / 18; const bob = Math.round(Math.sin(t) * 2); const blink = Math.floor(frame % 180) > 174;
+    ctx.clearRect(0,0,160,200); rect(0,0,160,200,'#e8f7f5');
+    // pixel confetti / backdrop
+    rect(18,28,2,2,'#fff'); rect(137,48,2,2,'#fff'); rect(25,132,3,3,'#d0eceb'); rect(126,118,2,2,'#c2e2e4');
+    // shadow
+    rect(49,181,61,3,'#a7d4d6'); rect(57,184,46,2,'#c6e7e6');
+    // hair silhouette, wavy and dark
+    rect(57,35+bob,46,5,'#2f2938'); rect(51,42+bob,58,25,'#2f2938'); rect(47,51+bob,9,25,'#2f2938'); rect(104,49+bob,10,33,'#2f2938'); rect(54,69+bob,7,14,'#2f2938'); rect(101,72+bob,8,14,'#2f2938');
+    rect(59,31+bob,37,5,'#3d3446'); rect(50,45+bob,6,12,'#473b50'); rect(106,44+bob,5,18,'#473b50');
+    // face, light skin, no earrings
+    rect(61,44+bob,39,30,'#f5c9a7'); rect(57,51+bob,45,15,'#f5c9a7'); rect(66,70+bob,27,9,'#f5c9a7');
+    // wavy fringe
+    rect(58,43+bob,10,10,'#2f2938'); rect(65,39+bob,16,7,'#2f2938'); rect(78,39+bob,13,6,'#2f2938'); rect(90,43+bob,11,11,'#2f2938'); rect(97,49+bob,6,9,'#2f2938');
+    // green-brown eyes and face details
+    if (blink) { rect(68,57+bob,6,2,'#5b5634'); rect(87,57+bob,6,2,'#5b5634'); } else { rect(69,56+bob,5,5,'#6d743d'); rect(88,56+bob,5,5,'#6d743d'); rect(71,57+bob,2,2,'#3d332d'); rect(90,57+bob,2,2,'#3d332d'); }
+    rect(79,66+bob,5,2,'#d18d7f'); rect(76,72+bob,11,2,'#c87979');
+    // neck and outfit
+    rect(74,77+bob,14,9,'#f5c9a7'); rect(58,84+bob,47,30,outfit.top); rect(53,91+bob,57,24,outfit.top); rect(58,108+bob,47,8,outfit.shadow);
+    // collar / pocket detail
+    rect(73,86+bob,6,12,'#fffdf8'); rect(80,86+bob,6,12,outfit.shadow); rect(82,99+bob,8,5,outfit.accent); rect(84,100+bob,2,2,'#fff');
+    // arms
+    rect(48,92+bob,9,28,'#f5c9a7'); rect(104,92+bob,9,28,'#f5c9a7'); rect(46,116+bob,12,7,'#f5c9a7'); rect(104,116+bob,12,7,'#f5c9a7');
+    // skirt / bottom
+    rect(52,114+bob,55,10,outfit.bottom); rect(48,121+bob,63,23,outfit.bottom); rect(53,143+bob,53,6,outfit.shadow);
+    // legs and shoes
+    rect(62,146+bob,13,29,'#f5c9a7'); rect(86,146+bob,13,29,'#f5c9a7'); rect(58,173+bob,21,8,'#2f2938'); rect(83,173+bob,21,8,'#2f2938'); rect(62,173+bob,13,3,'#fff'); rect(87,173+bob,12,3,'#fff');
+  };
+  const animate = () => { frame += 1; draw(); requestAnimationFrame(animate); };
+  buttons.forEach((button) => button.addEventListener('click', () => { look = button.dataset.look; buttons.forEach((item) => item.classList.toggle('is-selected', item === button)); lookEl.textContent = looks[look].name; messageEl.textContent = looks[look].message; }));
+  draw(); animate();
 })();
-
 
 /* LANGUAGE SWITCHER — Portuguese / English */
 (() => {
@@ -153,8 +181,8 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape' && mo
     'tcchat-design':{kind:'DESIGN · ARCHITECTURE',desc:'Visual study organizing dashboards, profiles, permissions, groups and states before implementation.',role:'Flows and visual language for different user profiles.',practice:'Screen architecture and design system.',details:[['GOAL','Give the product shape before building it.'],['STRUCTURE','Dashboards, profiles, groups and progress.'],['LEARNING','Design connects rules, people and development.'],['NEXT STEP','Consolidate the design system in a navigable prototype.']],link:'open in Figma'}
   };
   const text = {
-    en:{nav:['about','skills','projects','play','contact'],heroEyebrow:'PORTFOLIO / EDUARDA DE SOUZA TEIXEIRA',hero:'I turn<br><em>curiosity</em><br>into products.',intro:'Developer in training, Systems Development student and creator of digital experiences that mix code, design and the joy of discovering.',projectsButton:'view my projects',aboutLabel:'01 / ABOUT ME',aboutNote:'still learning,<br>already creating.',aboutEyebrow:'NICE TO MEET YOU, I AM EDUARDA',aboutTitle:'A <em>curious</em><br>mind.',skillsLabel:'02 / TOOLS',projectsLabel:'03 / PROJECTS',gameLabel:'04 / PLAYGROUND',experienceLabel:'05 / PRACTICAL EXPERIENCE',contactLabel:'06 / CONTACT',projectSide:'what I created<br>to learn by doing.',projectIntro:'Every project shows part of my process: the problem I found, the decisions I made, what I built and what I still want to improve.',filters:['all','web','mobile','academic','personal'],gameTitle:'Play the<br><em>Snake.</em>',gameIntro:'A blue snake collects words that feel like me. Use the arrow keys or WASD, collect the stars and see what happens.',gameBadge:'✦ play',gameControls:'USE ARROW KEYS OR WASD',gameName:'snake in the sky',gameDesc:'A small JavaScript pause with the same soft atmosphere as my portfolio.',start:'start game',stars:'stars',time:'time',gameReady:'when you are ready, press start.',experienceTitle:'Learning<br>by doing.',experienceText:'I am building my first formal professional experience, but I have already developed complete systems and interfaces from concept to implementation.',contactTitle:'Let’s create<br>something <em>beautiful?</em>',contactText:'I am looking for an internship or first opportunity in technology, systems development or digital media.',email:'send an email',modalLabels:['WHAT THIS PROJECT SOLVES','MY CONTRIBUTION','HOW I THOUGHT ABOUT IT','WHAT WAS BUILT','TECHNOLOGIES','WHAT I LEARNED','NEXT STEP']},
-    pt:{nav:['sobre','skills','projetos','play','contato'],heroEyebrow:'PORTFÓLIO / EDUARDA DE SOUZA TEIXEIRA',hero:'Eu transformo<br><em>curiosidade</em><br>em produto.',intro:'Desenvolvedora em formação, estudante de Desenvolvimento de Sistemas e criadora de experiências digitais que misturam código, design e vontade de descobrir.',projectsButton:'ver meus projetos',aboutLabel:'01 / QUEM ESTÁ POR TRÁS',aboutNote:'ainda aprendendo,<br>já fazendo.',aboutEyebrow:'PRAZER, EU SOU A EDUARDA',aboutTitle:'Uma mente<br><em>curiosa.</em>',skillsLabel:'02 / FERRAMENTAS',projectsLabel:'03 / PROJETOS',gameLabel:'04 / PLAYGROUND',experienceLabel:'05 / EXPERIÊNCIA PRÁTICA',contactLabel:'06 / CONTATO',projectSide:'o que eu criei<br>para aprender fazendo.',projectIntro:'Cada projeto mostra uma parte do meu processo: o problema que encontrei, as decisões que tomei, o que eu construí e o que ainda quero melhorar.',filters:['todos','web','mobile','acadêmicos','pessoais'],gameTitle:'Jogue a<br><em>Cobrinha.</em>',gameIntro:'Uma cobrinha azul que coleciona palavras que combinam comigo. Use as setas ou WASD, pegue as estrelinhas e descubra o que acontece.',gameBadge:'✦ jogar',gameControls:'USE AS SETAS OU WASD',gameName:'cobrinha no céu',gameDesc:'Uma pausa interativa feita em JavaScript, com a mesma atmosfera macia do meu portfólio.',start:'começar partida',stars:'estrelas',time:'tempo',gameReady:'quando estiver pronta, aperte começar.',experienceTitle:'Aprender<br>fazendo.',experienceText:'Ainda estou construindo minha primeira experiência profissional formal, mas já desenvolvi sistemas e interfaces completos do conceito à implementação.',contactTitle:'Vamos criar<br>algo <em>bonito?</em>',contactText:'Estou buscando uma oportunidade de estágio ou primeira experiência em tecnologia, desenvolvimento de sistemas ou meios digitais.',email:'enviar e-mail',modalLabels:['O QUE ESTE PROJETO RESOLVE','MINHA CONTRIBUIÇÃO','COMO PENSEI','O QUE FOI CONSTRUÍDO','TECNOLOGIAS','O QUE APRENDI','PRÓXIMO PASSO']}
+    en:{nav:['about','skills','projects','play','contact'],heroEyebrow:'PORTFOLIO / EDUARDA DE SOUZA TEIXEIRA',hero:'I turn<br><em>curiosity</em><br>into products.',intro:'Developer in training, Systems Development student and creator of digital experiences that mix code, design and the joy of discovering.',projectsButton:'view my projects',aboutLabel:'01 / ABOUT ME',aboutNote:'still learning,<br>already creating.',aboutEyebrow:'NICE TO MEET YOU, I AM EDUARDA',aboutTitle:'A <em>curious</em><br>mind.',skillsLabel:'02 / TOOLS',projectsLabel:'03 / PROJECTS',gameLabel:'04 / PLAYGROUND',experienceLabel:'05 / PRACTICAL EXPERIENCE',contactLabel:'06 / CONTACT',projectSide:'what I created<br>to learn by doing.',projectIntro:'Every project shows part of my process: the problem I found, the decisions I made, what I built and what I still want to improve.',filters:['all','web','mobile','academic','personal'],gameTitle:'Dress up<br><em>the Dev.</em>',gameIntro:'A small pixel art character for you to style while getting to know my creative universe.',gameBadge:'✦ play',gameControls:'CHOOSE A LOOK',gameName:'dress up the dev',gameDesc:'A tiny JavaScript dress-up game with the same soft atmosphere as my portfolio.',start:'choose your look',stars:'look',time:'animation',gameReady:'start with the basic look and make it yours.',experienceTitle:'Learning<br>by doing.',experienceText:'I am building my first formal professional experience, but I have already developed complete systems and interfaces from concept to implementation.',contactTitle:'Let’s create<br>something <em>beautiful?</em>',contactText:'I am looking for an internship or first opportunity in technology, systems development or digital media.',email:'send an email',modalLabels:['WHAT THIS PROJECT SOLVES','MY CONTRIBUTION','HOW I THOUGHT ABOUT IT','WHAT WAS BUILT','TECHNOLOGIES','WHAT I LEARNED','NEXT STEP']},
+    pt:{nav:['sobre','skills','projetos','play','contato'],heroEyebrow:'PORTFÓLIO / EDUARDA DE SOUZA TEIXEIRA',hero:'Eu transformo<br><em>curiosidade</em><br>em produto.',intro:'Desenvolvedora em formação, estudante de Desenvolvimento de Sistemas e criadora de experiências digitais que misturam código, design e vontade de descobrir.',projectsButton:'ver meus projetos',aboutLabel:'01 / QUEM ESTÁ POR TRÁS',aboutNote:'ainda aprendendo,<br>já fazendo.',aboutEyebrow:'PRAZER, EU SOU A EDUARDA',aboutTitle:'Uma mente<br><em>curiosa.</em>',skillsLabel:'02 / FERRAMENTAS',projectsLabel:'03 / PROJETOS',gameLabel:'04 / PLAYGROUND',experienceLabel:'05 / EXPERIÊNCIA PRÁTICA',contactLabel:'06 / CONTATO',projectSide:'o que eu criei<br>para aprender fazendo.',projectIntro:'Cada projeto mostra uma parte do meu processo: o problema que encontrei, as decisões que tomei, o que eu construí e o que ainda quero melhorar.',filters:['todos','web','mobile','acadêmicos','pessoais'],gameTitle:'Vista a<br><em>Dev.</em>',gameIntro:'Uma pequena personagem pixel art para você montar looks fofos enquanto conhece um pouco mais do meu universo.',gameBadge:'✦ jogar',gameControls:'ESCOLHA UM LOOK',gameName:'vista a dev',gameDesc:'Um pequeno jogo de vestir feito em JavaScript, com a mesma atmosfera macia do meu portfólio.',start:'escolha seu look',stars:'look',time:'animação',gameReady:'comece pela básica e monte seu look favorito.',experienceTitle:'Aprender<br>fazendo.',experienceText:'Ainda estou construindo minha primeira experiência profissional formal, mas já desenvolvi sistemas e interfaces completos do conceito à implementação.',contactTitle:'Vamos criar<br>algo <em>bonito?</em>',contactText:'Estou buscando uma oportunidade de estágio ou primeira experiência em tecnologia, desenvolvimento de sistemas ou meios digitais.',email:'enviar e-mail',modalLabels:['O QUE ESTE PROJETO RESOLVE','MINHA CONTRIBUIÇÃO','COMO PENSEI','O QUE FOI CONSTRUÍDO','TECNOLOGIAS','O QUE APRENDI','PRÓXIMO PASSO']}
   };
   const apply = () => {
     const t = text[lang]; document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
@@ -163,7 +191,7 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape' && mo
     set('.hero .eyebrow',t.heroEyebrow); set('.hero h1',t.hero); setText('.hero-intro',t.intro); setText('.hero-cta .btn.solid',t.projectsButton+' ↓');
     setText('#sobre .section-top>span:first-child',t.aboutLabel); set('#sobre .side-note',t.aboutNote); setText('#sobre .eyebrow',t.aboutEyebrow); set('#sobre h2',t.aboutTitle);
     setText('#skills .section-top>span:first-child',t.skillsLabel); setText('#projetos .section-top>span:first-child',t.projectsLabel); setText('#game .section-top>span:first-child',t.gameLabel); setText('#experiencia .section-top>span:first-child',t.experienceLabel); setText('#contato .contact-paper>.mono',t.contactLabel);
-    setText('.projects .side-note',t.projectSide); setText('.projects-intro>p',t.projectIntro); set('#game h2',t.gameTitle); setText('.game-heading>p',t.gameIntro); setText('.game-badge',t.gameBadge); setText('.game-copy>.mono',t.gameControls); setText('.game-copy h3',t.gameName); setText('.game-copy>p:not(.mono):not(.game-message)',t.gameDesc); setText('.game-start',t.start+' ↗'); set('.game-stats span:first-child',`${t.stars} <b id="game-score">0 / 8</b>`); set('.game-stats span:nth-child(2)',`${t.time} <b id="game-time">30s</b>`); if(!window.snakeRunning) setText('#game-message',t.gameReady);
+    setText('.projects .side-note',t.projectSide); setText('.projects-intro>p',t.projectIntro); set('#game h2',t.gameTitle); setText('.game-heading>p',t.gameIntro); setText('.game-badge',t.gameBadge); setText('.game-copy>.mono',t.gameControls); setText('.game-copy h3',t.gameName); setText('.game-copy>p:not(.mono):not(.game-message)',t.gameDesc); setText('.game-start',t.start+' ↗'); set('.game-stats span:first-child',`${t.stars} <b id="game-look">básica</b>`); set('.game-stats span:nth-child(2)',`${t.time} <b>ativa</b>`); setText('#game-message',t.gameReady);
     set('#experiencia h2',t.experienceTitle); setText('#experiencia .experience-grid>div>p',t.experienceText); set('#contato h2',t.contactTitle); setText('#contato .contact-paper>p',t.contactText); setText('.contact-links .btn',t.email+' ↗');
     if(lang==='en'){
       const about=['I have knowledge in Systems Development, mainly HTML, CSS, JavaScript, PHP, React and React Native. I also work with Firebase and intermediate SQL, authentication, CRUD, database integration and responsive interfaces.','In design, I am comfortable with Canva and have experience with Figma for layouts and prototypes. I have also used InDesign, have basic knowledge of Photoshop and other Adobe tools, and use CapCut to edit videos and content.','Alongside academic projects, I create personal projects to practice and learn new technologies. I am curious, learn quickly and enjoy looking for solutions when I find something I do not know yet.']; $$('.manifesto-text>p').forEach((el,i)=>{if(about[i])el.textContent=about[i];}); set('.signature','made with<br><em>curiosity + care</em> <span>✦</span>');
