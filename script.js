@@ -130,10 +130,10 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape' && mo
   const draw=()=>{
     const bob=Math.round(Math.sin(frame/18)*2), blink=Math.floor(frame%180)>174; drawScene();
     const skin='#f6d9c5', skinLight='#ffe9db', skinShade='#dfb29e';
-    const hair=state.hair==='cocoa'?'#302129':state.hair==='waves'?'#38231f':'#241c23';
-    const hairMid='#3a2930', hairLight='#5d4140', hairGlint='#72524d';
+    const hair=state.hair==='cocoa'?'#322028':state.hair==='waves'?'#352025':'#28191f';
+    const hairMid='#45252c', hairLight='#60343a', hairGlint='#77424a';
     rect(50,207,78,4,'#765043');rect(60,211,58,2,'#a26f57');
-    const hairOutline='#251b20';
+    const hairOutline='#21171c';
     // Silhueta chibi: topo arredondado e cachos compridos que chegam à cintura.
     rect(68,28+bob,44,8,hairOutline);rect(61,33+bob,59,10,hairOutline);rect(55,41+bob,72,14,hairOutline);
     rect(51,51+bob,17,17,hairOutline);rect(47,65+bob,18,15,hairOutline);rect(45,78+bob,19,16,hairOutline);rect(47,92+bob,17,16,hairOutline);rect(44,106+bob,20,16,hairOutline);rect(47,120+bob,18,15,hairOutline);rect(52,133+bob,17,13,hairOutline);rect(60,143+bob,16,5,hairOutline);
@@ -155,7 +155,7 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape' && mo
     rect(111,58+bob,7,12,hair);rect(110,68+bob,6,11,hairMid);rect(112,78+bob,7,11,hair);rect(108,87+bob,7,10,hairMid);rect(105,94+bob,5,5,hair);
     rect(65,62+bob,3,6,hairGlint);rect(68,80+bob,3,6,hairLight);rect(113,62+bob,3,6,hairGlint);rect(110,80+bob,3,6,hairLight);
     // Sobrancelhas delicadas; íris verde-avelã com aro castanho e brilhos duplos.
-    rect(71,61+bob,7,2,hairMid);rect(78,59+bob,7,2,hairMid);rect(97,59+bob,7,2,hairMid);rect(104,61+bob,7,2,hairMid);
+    rect(71,60+bob,16,3,hairOutline);rect(96,60+bob,16,3,hairOutline);
     if(blink){rect(72,70+bob,14,2,'#493638');rect(97,70+bob,14,2,'#493638');rect(74,72+bob,10,1,'#c1847b');rect(99,72+bob,10,1,'#c1847b')}
     else{
       rect(71,64+bob,16,16,'#493638');rect(96,64+bob,16,16,'#493638');
@@ -174,18 +174,19 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape' && mo
     rect(86,89+bob,9,2,'#a95f68');rect(84,88+bob,3,2,'#a95f68');rect(94,88+bob,3,2,'#a95f68');rect(88,91+bob,6,1,'#da8790');
     // Pernas em tom de pele consistente.
     rect(70,169+bob,16,34,skin);rect(101,169+bob,16,34,skin);rect(71,170+bob,3,24,skinLight);rect(102,170+bob,3,24,skinLight);
-    rect(71,183+bob,14,13,'#fff5ed');rect(102,183+bob,14,13,'#fff5ed');rect(71,183+bob,14,2,'#df8794');rect(102,183+bob,14,2,'#df8794');
+    rect(68,180+bob,20,19,hairOutline);rect(99,180+bob,20,19,hairOutline);rect(71,183+bob,14,13,'#fff5ed');rect(102,183+bob,14,13,'#fff5ed');rect(71,183+bob,14,2,'#df8794');rect(102,183+bob,14,2,'#df8794');
     // Saia / parte inferior combinável.
-    if(state.bottom==='skirt'){rect(63,133+bob,61,10,'#8fc6e2');rect(57,142+bob,73,31,'#78b2d4');rect(63,168+bob,61,7,'#4b86ad');rect(73,143+bob,6,26,'#a9d8ea');rect(101,143+bob,6,26,'#a9d8ea')}
-    if(state.bottom==='shorts'){rect(64,135+bob,59,17,'#527fa3');rect(64,148+bob,27,22,'#416981');rect(95,148+bob,28,22,'#416981');rect(91,151+bob,4,19,skin)}
-    if(state.bottom==='tutu'){rect(60,137+bob,67,9,'#f3a3c0');rect(54,146+bob,79,22,'#f6c9df');rect(61,155+bob,65,18,'#e994bc');rect(56,143+bob,73,3,'#fff1f5')}
+    if(state.bottom==='skirt'){rect(54,139+bob,79,38,hairOutline);rect(63,133+bob,61,10,'#8fc6e2');rect(57,142+bob,73,31,'#78b2d4');rect(63,168+bob,61,7,'#4b86ad');rect(73,143+bob,6,26,'#a9d8ea');rect(101,143+bob,6,26,'#a9d8ea')}
+    if(state.bottom==='shorts'){rect(61,132+bob,65,40,hairOutline);rect(64,135+bob,59,17,'#527fa3');rect(64,148+bob,27,22,'#416981');rect(95,148+bob,28,22,'#416981');rect(91,151+bob,4,19,skin)}
+    if(state.bottom==='tutu'){rect(51,140+bob,85,36,hairOutline);rect(60,137+bob,67,9,'#f3a3c0');rect(54,146+bob,79,22,'#f6c9df');rect(61,155+bob,65,18,'#e994bc');rect(56,143+bob,73,3,'#fff1f5')}
     // Blusas e jaqueta preservam o look inicial azul e rosa.
-    if(state.top==='jacket'){rect(69,99+bob,51,39,'#72b7d9');rect(63,107+bob,12,38,'#92cde6');rect(113,107+bob,12,38,'#92cde6');rect(82,100+bob,25,37,'#e84e9a');rect(85,102+bob,5,6,'#ffc6dc');rect(99,102+bob,5,6,'#ffc6dc');rect(87,110+bob,3,3,'#fff0c9');rect(87,120+bob,3,3,'#fff0c9');rect(82,128+bob,25,4,'#c93b84')}
-    if(state.top==='sweater'){rect(68,100+bob,57,42,'#f0b47e');rect(62,109+bob,12,35,'#e8a36e');rect(116,109+bob,12,35,'#e8a36e');rect(82,108+bob,29,5,'#fff0c8');rect(89,119+bob,15,5,'#d88966')}
-    if(state.top==='hoodie'){rect(66,101+bob,60,43,'#906eb0');rect(59,111+bob,13,35,'#80609d');rect(119,111+bob,13,35,'#80609d');rect(80,101+bob,32,17,'#6b508a');rect(85,112+bob,20,4,'#e6b1cf')}
-    if(state.top==='raincoat'){rect(67,99+bob,58,46,'#e2b84e');rect(60,108+bob,13,38,'#d9aa3b');rect(118,108+bob,13,38,'#d9aa3b');rect(83,101+bob,26,43,'#f7dd77');rect(87,111+bob,18,4,'#9a7650')}
+    if(state.top==='jacket'){rect(66,96+bob,57,45,hairOutline);rect(60,104+bob,18,44,hairOutline);rect(110,104+bob,18,44,hairOutline);rect(69,99+bob,51,39,'#72b7d9');rect(63,107+bob,12,38,'#92cde6');rect(113,107+bob,12,38,'#92cde6');rect(79,97+bob,31,42,hairOutline);rect(82,100+bob,25,37,'#e84e9a');rect(85,102+bob,5,6,'#ffc6dc');rect(99,102+bob,5,6,'#ffc6dc');rect(87,110+bob,3,3,'#fff0c9');rect(87,120+bob,3,3,'#fff0c9');rect(82,128+bob,25,4,'#c93b84')}
+    if(state.top==='sweater'){rect(65,97+bob,63,48,hairOutline);rect(59,106+bob,18,41,hairOutline);rect(110,106+bob,18,41,hairOutline);rect(68,100+bob,57,42,'#f0b47e');rect(62,109+bob,12,35,'#e8a36e');rect(116,109+bob,12,35,'#e8a36e');rect(82,108+bob,29,5,'#fff0c8');rect(89,119+bob,15,5,'#d88966')}
+    if(state.top==='hoodie'){rect(63,98+bob,66,49,hairOutline);rect(56,108+bob,19,41,hairOutline);rect(117,108+bob,19,41,hairOutline);rect(66,101+bob,60,43,'#906eb0');rect(59,111+bob,13,35,'#80609d');rect(119,111+bob,13,35,'#80609d');rect(80,101+bob,32,17,'#6b508a');rect(85,112+bob,20,4,'#e6b1cf')}
+    if(state.top==='raincoat'){rect(64,96+bob,64,52,hairOutline);rect(57,105+bob,19,43,hairOutline);rect(116,105+bob,19,43,hairOutline);rect(67,99+bob,58,46,'#e2b84e');rect(60,108+bob,13,38,'#d9aa3b');rect(118,108+bob,13,38,'#d9aa3b');rect(83,101+bob,26,43,'#f7dd77');rect(87,111+bob,18,4,'#9a7650')}
     // Braços e mãos em pele clara, com as mangas por cima dos ombros.
-    rect(57,117+bob,10,27,skin);rect(123,117+bob,10,27,skin);rect(54,138+bob,14,8,skin);rect(122,138+bob,14,8,skin);rect(56,139+bob,5,3,skinLight);rect(124,139+bob,5,3,skinLight);
+    rect(55,115+bob,14,31,skinShade);rect(57,117+bob,10,27,skin);rect(53,136+bob,16,11,skinShade);rect(54,138+bob,14,8,skin);rect(56,139+bob,5,3,skinLight);
+    rect(121,115+bob,14,31,skinShade);rect(123,117+bob,10,27,skin);rect(121,136+bob,16,11,skinShade);rect(122,138+bob,14,8,skin);rect(124,139+bob,5,3,skinLight);
     // Sapatos combináveis.
     if(state.shoes==='boots'){rect(67,198+bob,22,10,'#292d3b');rect(99,198+bob,22,10,'#292d3b');rect(70,195+bob,16,6,'#5e80a0');rect(102,195+bob,16,6,'#5e80a0')}
     if(state.shoes==='sneakers'){rect(66,198+bob,25,8,'#fff');rect(98,198+bob,25,8,'#fff');rect(70,195+bob,16,5,'#e85d79');rect(102,195+bob,16,5,'#e85d79')}
