@@ -110,104 +110,262 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape' && mo
 
 
 
-/* MIMI — jogo de vestir por camadas, com uma única bonequinha */
+/* VISTA A DEV — dress-up studio */
 (() => {
-  const canvas=document.querySelector('#dressup-canvas'); if(!canvas)return;
-  const ctx=canvas.getContext('2d'); ctx.imageSmoothingEnabled=false;
-  const buttons=[...document.querySelectorAll('.mimi-choice')], tabs=[...document.querySelectorAll('.mimi-tab')], panels=[...document.querySelectorAll('.mimi-slot')], scenes=[...document.querySelectorAll('.scene-button')];
-  const message=document.querySelector('#game-message'), stageLook=document.querySelector('#stage-look');
-  const state={hair:'brown',top:'jacket',bottom:'skirt',shoes:'boots',detail:'none',scene:'wood'}; let frame=0, lookNumber=1;
-  const copy={
-    hair:{brown:'castanho',cocoa:'chanel',waves:'ondas definidas'},top:{jacket:'jaqueta azul',sweater:'tricô fofo',hoodie:'moletom',raincoat:'capa chuva'},bottom:{skirt:'saia azul',shorts:'short jeans',tutu:'tutu rosa'},shoes:{boots:'botinhas',sneakers:'tênis',maryjanes:'boneca'},detail:{buttons:'botões',pocket:'bolsinho',cuffs:'punhos coloridos',none:'sem detalhe'}
-  };
-  const rect=(x,y,w,h,c)=>{ctx.fillStyle=c;ctx.fillRect(x,y,w,h)};
-  const drawScene=()=>{
-    const s=state.scene; ctx.clearRect(0,0,180,230);
-    if(s==='wood'){rect(0,0,180,230,'#c99572');for(let x=8;x<180;x+=32){rect(x,0,3,230,'#b5795e');rect(x+5,0,2,230,'#e1b28c')}for(let y=26;y<230;y+=42){rect(0,y,180,2,'#d9a07b');}rect(20,49,37,51,'#9a654e');rect(25,54,27,41,'#b47759');rect(122,46,37,53,'#e5b58e');rect(127,51,27,43,'#f0c9a0');}
-    if(s==='garden'){rect(0,0,180,230,'#a8d1bb');rect(0,145,180,85,'#79ad76');for(let x=10;x<180;x+=30){rect(x,128,3,33,'#5d9362');rect(x-7,128,15,4,'#5d9362')}rect(25,34,3,3,'#fff0a3');rect(144,55,3,3,'#fff0a3');rect(31,118,5,5,'#f7a8a8');rect(139,111,5,5,'#f7d474')}
-    if(s==='night'){rect(0,0,180,230,'#273953');rect(0,151,180,79,'#1e2a43');rect(24,25,42,42,'#f5e6aa');rect(29,30,34,32,'#fff2bf');rect(100,23,3,3,'#f8de88');rect(133,48,3,3,'#f8de88');rect(20,129,4,4,'#d9e7ff');rect(153,93,3,3,'#d9e7ff')}
-  };
-  const draw=()=>{
-    const bob=Math.round(Math.sin(frame/18)*2), blink=Math.floor(frame%180)>174; drawScene();
-    const skin='#f6d9c5', skinLight='#ffe9db', skinShade='#dfb29e';
-    const hair=state.hair==='cocoa'?'#322028':state.hair==='waves'?'#352025':'#28191f';
-    const hairMid='#45252c', hairLight='#60343a', hairGlint='#77424a';
-    rect(50,207,78,4,'#765043');rect(60,211,58,2,'#a26f57');
-    const hairOutline='#21171c';
-    // Silhueta chibi: topo arredondado e cachos compridos que chegam à cintura.
+  const canvas = document.querySelector('#dressup-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d', { alpha: false });
+  const rect = (x, y, w, h, color) => { ctx.fillStyle = color; ctx.fillRect(x, y, w, h); };
+  const tabs = [...document.querySelectorAll('.mimi-tab')];
+  const panels = [...document.querySelectorAll('.mimi-slot')];
+  const choices = [...document.querySelectorAll('.mimi-choice')];
+  const scenes = [...document.querySelectorAll('.scene-button')];
+  const stage = document.querySelector('.vista-stage');
+  const message = document.querySelector('#game-message');
+  const lookLabel = document.querySelector('#game-look');
+  const stageLook = document.querySelector('#stage-look');
+  const slots = ['hair', 'top', 'bottom', 'shoes', 'detail'];
+  const defaults = { hair: 'brown', top: 'jacket', bottom: 'skirt', shoes: 'boots', detail: 'none', scene: 'wood' };
+  const state = { ...defaults };
+  let frame = 0;
+  let lookNumber = 1;
+  const locale = () => document.documentElement.lang === 'en' ? 'en' : 'pt';
+
+  function drawScene() {
+    const scene = state.scene;
+    ctx.clearRect(0, 0, 180, 230);
+    if (scene === 'wood') {
+      rect(0, 0, 180, 230, '#d8b58e');
+      rect(0, 0, 180, 166, '#e8cfaa');
+      for (let x = 0; x < 180; x += 30) rect(x, 0, 2, 166, '#d0ae8a');
+      for (let y = 28; y < 166; y += 34) rect(0, y, 180, 2, '#f2dfbf');
+      rect(15, 30, 49, 66, '#4a3039');rect(19, 34, 41, 58, '#9fc7c3');
+      rect(38, 34, 3, 58, '#f5e8c9');rect(19, 61, 41, 3, '#f5e8c9');
+      rect(11, 25, 7, 76, '#a85758');rect(58, 25, 7, 76, '#a85758');
+      rect(0, 163, 180, 67, '#a96954');rect(0, 163, 180, 5, '#f0d2a6');
+      for (let y = 176; y < 230; y += 18) {rect(0, y, 180, 2, '#8d5648');rect(38, y + 2, 2, 15, '#8d5648');rect(119, y + 2, 2, 15, '#8d5648');}
+      rect(129, 56, 35, 37, '#f4dfbb');rect(134, 61, 25, 27, '#d69a65');rect(130, 94, 34, 4, '#563741');
+      rect(0, 226, 180, 4, '#51353d');
+    }
+    if (scene === 'garden') {
+      rect(0, 0, 180, 230, '#a9d3c1');rect(0, 117, 180, 113, '#83b47d');
+      rect(0, 137, 180, 22, '#719e69');rect(0, 162, 180, 68, '#c99570');
+      rect(18, 24, 23, 7, '#f9f1db');rect(12, 29, 35, 7, '#f9f1db');rect(133, 38, 26, 7, '#f9f1db');rect(139, 31, 17, 8, '#f9f1db');
+      rect(22, 74, 9, 48, '#795947');rect(10, 66, 31, 19, '#4d8060');rect(16, 55, 22, 16, '#5c956c');
+      rect(141, 89, 8, 37, '#7c5944');rect(131, 82, 28, 18, '#5a8b5d');rect(136, 69, 20, 17, '#6b9b65');
+      for (const [x, y, c] of [[52,119,'#f1d477'],[66,131,'#ed8890'],[117,117,'#fff0c2'],[157,133,'#e58e9a'],[36,145,'#fff0c2'],[97,141,'#e58e9a']]) {rect(x,y,4,4,c);rect(x+1,y-2,2,2,'#fff3d7');}
+      rect(0, 163, 180, 4, '#f2d1a5');
+      for (let x = 0; x < 180; x += 29) rect(x, 177, 2, 53, '#af795e');
+    }
+    if (scene === 'night') {
+      rect(0, 0, 180, 230, '#303347');rect(0, 163, 180, 67, '#76515b');
+      rect(16, 25, 57, 66, '#211e2b');rect(21, 30, 47, 56, '#59617d');
+      rect(43, 30, 3, 56, '#ddd4b8');rect(21, 57, 47, 3, '#ddd4b8');
+      rect(117, 30, 33, 30, '#f0dda6');rect(123, 35, 25, 20, '#f8eabf');rect(136, 37, 3, 3, '#c9c2a4');rect(142, 46, 3, 3, '#c9c2a4');
+      for (const [x,y] of [[93,29],[112,81],[156,73],[88,113],[29,111],[162,119],[78,46]]) {rect(x,y,3,3,'#fff0bd');rect(x+1,y-2,1,2,'#fff0bd');}
+      rect(0, 163, 180, 5, '#d0a079');
+      for (let y = 178; y < 230; y += 18) rect(0, y, 180, 2, '#593e4d');
+    }
+  }
+
+  function drawCharacter() {
+    const bob = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : Math.round(Math.sin(frame / 18) * 2);
+    const blink = Math.floor(frame % 180) > 174;
+    const skin = '#f6d9c5', skinLight = '#ffe9db', skinShade = '#dfb29e';
+    const hair = state.hair === 'cocoa' ? '#322028' : state.hair === 'waves' ? '#352025' : '#28191f';
+    const hairMid = '#45252c', hairLight = '#60343a', hairGlint = '#77424a';
+    const hairOutline = '#21171c';
+
+    // Silhueta longa e ondulada; as mechas ficam em degraus para manter a leitura pixel art.
     rect(68,28+bob,44,8,hairOutline);rect(61,33+bob,59,10,hairOutline);rect(55,41+bob,72,14,hairOutline);
     rect(51,51+bob,17,17,hairOutline);rect(47,65+bob,18,15,hairOutline);rect(45,78+bob,19,16,hairOutline);rect(47,92+bob,17,16,hairOutline);rect(44,106+bob,20,16,hairOutline);rect(47,120+bob,18,15,hairOutline);rect(52,133+bob,17,13,hairOutline);rect(60,143+bob,16,5,hairOutline);
     rect(112,51+bob,17,17,hairOutline);rect(116,65+bob,18,15,hairOutline);rect(116,78+bob,19,16,hairOutline);rect(116,92+bob,17,16,hairOutline);rect(117,106+bob,20,16,hairOutline);rect(115,120+bob,18,15,hairOutline);rect(111,133+bob,17,13,hairOutline);rect(105,143+bob,16,5,hairOutline);
     rect(70,29+bob,40,7,hair);rect(62,35+bob,57,9,hair);rect(57,43+bob,68,12,hair);
     rect(54,53+bob,12,15,hair);rect(50,66+bob,13,13,hair);rect(48,79+bob,13,14,hair);rect(50,93+bob,12,13,hair);rect(47,107+bob,14,14,hair);rect(50,121+bob,13,13,hair);rect(56,134+bob,12,10,hair);rect(63,143+bob,11,3,hair);
     rect(115,53+bob,12,15,hair);rect(118,66+bob,13,13,hair);rect(120,79+bob,13,14,hair);rect(118,93+bob,12,13,hair);rect(119,107+bob,14,14,hair);rect(116,121+bob,13,13,hair);rect(112,134+bob,12,10,hair);rect(106,143+bob,11,3,hair);
-    // Mechas em zigue-zague e reflexos castanhos aquecem a massa escura do cabelo.
     rect(57,61+bob,5,8,hairMid);rect(61,73+bob,5,8,hairGlint);rect(55,86+bob,5,8,hairMid);rect(59,99+bob,5,8,hairLight);rect(54,113+bob,5,8,hairMid);rect(59,126+bob,5,8,hairGlint);rect(65,137+bob,5,6,hairLight);
     rect(119,61+bob,5,8,hairMid);rect(117,73+bob,5,8,hairGlint);rect(122,86+bob,5,8,hairMid);rect(118,99+bob,5,8,hairLight);rect(122,113+bob,5,8,hairMid);rect(117,126+bob,5,8,hairGlint);rect(111,137+bob,5,6,hairLight);
     rect(69,35+bob,9,3,hairLight);rect(82,33+bob,11,3,hairMid);rect(101,36+bob,10,3,hairGlint);rect(60,48+bob,7,3,hairGlint);rect(112,48+bob,7,3,hairMid);
-    // Orelhas e contorno de rosto arredondado, com queixo pequeno e luminoso.
+
+    // Rosto quente, contorno espesso e olhos grandes verde-avelã.
     rect(59,67+bob,8,14,skinShade);rect(61,69+bob,6,10,skin);rect(113,67+bob,8,14,skinShade);rect(113,69+bob,6,10,skin);
     rect(68,47+bob,44,3,hairOutline);rect(63,50+bob,6,7,hairOutline);rect(60,56+bob,4,29,hairOutline);rect(63,84+bob,5,10,hairOutline);rect(68,93+bob,8,7,hairOutline);rect(76,99+bob,31,4,hairOutline);rect(107,94+bob,8,6,hairOutline);rect(113,85+bob,4,10,hairOutline);rect(112,53+bob,5,8,hairOutline);
     rect(69,49+bob,42,4,skin);rect(65,53+bob,50,9,skin);rect(64,61+bob,52,22,skin);rect(66,82+bob,49,10,skin);rect(71,90+bob,39,7,skin);rect(78,96+bob,25,5,skin);rect(71,51+bob,12,2,skinLight);rect(67,56+bob,3,19,skinLight);
-    // Franja lateral em blocos suaves, sem encobrir os olhos grandes.
     rect(65,45+bob,50,8,hair);rect(62,50+bob,13,9,hair);rect(69,54+bob,9,6,hairMid);rect(75,48+bob,14,10,hair);rect(83,53+bob,11,6,hairLight);rect(91,44+bob,12,10,hair);rect(96,50+bob,11,7,hairMid);rect(103,48+bob,12,8,hair);rect(110,54+bob,8,8,hairLight);
     rect(63,58+bob,7,12,hair);rect(66,68+bob,6,11,hairMid);rect(63,78+bob,7,11,hair);rect(67,87+bob,7,10,hairMid);rect(72,94+bob,5,5,hair);
     rect(111,58+bob,7,12,hair);rect(110,68+bob,6,11,hairMid);rect(112,78+bob,7,11,hair);rect(108,87+bob,7,10,hairMid);rect(105,94+bob,5,5,hair);
     rect(65,62+bob,3,6,hairGlint);rect(68,80+bob,3,6,hairLight);rect(113,62+bob,3,6,hairGlint);rect(110,80+bob,3,6,hairLight);
-    // Sobrancelhas delicadas; íris verde-avelã com aro castanho e brilhos duplos.
     rect(71,60+bob,16,3,hairOutline);rect(96,60+bob,16,3,hairOutline);
-    if(blink){rect(72,70+bob,14,2,'#493638');rect(97,70+bob,14,2,'#493638');rect(74,72+bob,10,1,'#c1847b');rect(99,72+bob,10,1,'#c1847b')}
-    else{
-      rect(71,64+bob,16,16,'#493638');rect(96,64+bob,16,16,'#493638');
-      rect(72,65+bob,14,14,'#fffaf1');rect(97,65+bob,14,14,'#fffaf1');
-      rect(75,66+bob,9,11,'#755b3d');rect(100,66+bob,9,11,'#755b3d');
-      rect(76,66+bob,8,10,'#91a965');rect(101,66+bob,8,10,'#91a965');
-      rect(78,67+bob,5,8,'#52663f');rect(103,67+bob,5,8,'#52663f');
-      rect(79,67+bob,3,7,'#29332d');rect(104,67+bob,3,7,'#29332d');
+    if (blink) {
+      rect(72,70+bob,14,2,'#493638');rect(97,70+bob,14,2,'#493638');rect(74,72+bob,10,1,'#c1847b');rect(99,72+bob,10,1,'#c1847b');
+    } else {
+      rect(71,64+bob,16,16,'#493638');rect(96,64+bob,16,16,'#493638');rect(72,65+bob,14,14,'#fffaf1');rect(97,65+bob,14,14,'#fffaf1');
+      rect(75,66+bob,9,11,'#755b3d');rect(100,66+bob,9,11,'#755b3d');rect(76,66+bob,8,10,'#91a965');rect(101,66+bob,8,10,'#91a965');
+      rect(78,67+bob,5,8,'#52663f');rect(103,67+bob,5,8,'#52663f');rect(79,67+bob,3,7,'#29332d');rect(104,67+bob,3,7,'#29332d');
       rect(73,65+bob,4,3,'#fff');rect(98,65+bob,4,3,'#fff');rect(83,73+bob,2,2,'#e6f0cf');rect(108,73+bob,2,2,'#e6f0cf');
       rect(71,63+bob,6,2,hairMid);rect(82,64+bob,4,2,hairMid);rect(96,64+bob,4,2,hairMid);rect(106,63+bob,6,2,hairMid);
     }
-    // Bochechas rosadas, nariz pontual e sorriso discreto.
-    rect(69,82+bob,4,2,'#e9aa9f');rect(73,83+bob,6,3,'#f0b9ae');rect(79,82+bob,3,2,'#e9aa9f');
-    rect(104,82+bob,3,2,'#e9aa9f');rect(107,83+bob,6,3,'#f0b9ae');rect(113,82+bob,3,2,'#e9aa9f');
-    rect(89,80+bob,3,3,skinShade);rect(91,82+bob,3,2,'#cf9183');
-    rect(86,89+bob,9,2,'#a95f68');rect(84,88+bob,3,2,'#a95f68');rect(94,88+bob,3,2,'#a95f68');rect(88,91+bob,6,1,'#da8790');
-    // Pernas em tom de pele consistente.
+    rect(69,82+bob,4,2,'#e9aa9f');rect(73,83+bob,6,3,'#f0b9ae');rect(79,82+bob,3,2,'#e9aa9f');rect(104,82+bob,3,2,'#e9aa9f');rect(107,83+bob,6,3,'#f0b9ae');rect(113,82+bob,3,2,'#e9aa9f');
+    rect(89,80+bob,3,3,skinShade);rect(91,82+bob,3,2,'#cf9183');rect(86,89+bob,9,2,'#a95f68');rect(84,88+bob,3,2,'#a95f68');rect(94,88+bob,3,2,'#a95f68');rect(88,91+bob,6,1,'#da8790');
+
+    // Corpo e camadas combináveis — todos os detalhes opcionais pertencem à roupa.
+    rect(50,207,78,4,'#765043');rect(60,211,58,2,'#a26f57');
     rect(70,169+bob,16,34,skin);rect(101,169+bob,16,34,skin);rect(71,170+bob,3,24,skinLight);rect(102,170+bob,3,24,skinLight);
     rect(68,180+bob,20,19,hairOutline);rect(99,180+bob,20,19,hairOutline);rect(71,183+bob,14,13,'#fff5ed');rect(102,183+bob,14,13,'#fff5ed');rect(71,183+bob,14,2,'#df8794');rect(102,183+bob,14,2,'#df8794');
-    // Saia / parte inferior combinável.
-    if(state.bottom==='skirt'){rect(54,139+bob,79,38,hairOutline);rect(63,133+bob,61,10,'#8fc6e2');rect(57,142+bob,73,31,'#78b2d4');rect(63,168+bob,61,7,'#4b86ad');rect(73,143+bob,6,26,'#a9d8ea');rect(101,143+bob,6,26,'#a9d8ea')}
-    if(state.bottom==='shorts'){rect(61,132+bob,65,40,hairOutline);rect(64,135+bob,59,17,'#527fa3');rect(64,148+bob,27,22,'#416981');rect(95,148+bob,28,22,'#416981');rect(91,151+bob,4,19,skin)}
-    if(state.bottom==='tutu'){rect(51,140+bob,85,36,hairOutline);rect(60,137+bob,67,9,'#f3a3c0');rect(54,146+bob,79,22,'#f6c9df');rect(61,155+bob,65,18,'#e994bc');rect(56,143+bob,73,3,'#fff1f5')}
-    // Blusas e jaqueta preservam o look inicial azul e rosa.
-    if(state.top==='jacket'){rect(66,96+bob,57,45,hairOutline);rect(60,104+bob,18,44,hairOutline);rect(110,104+bob,18,44,hairOutline);rect(69,99+bob,51,39,'#72b7d9');rect(63,107+bob,12,38,'#92cde6');rect(113,107+bob,12,38,'#92cde6');rect(79,97+bob,31,42,hairOutline);rect(82,100+bob,25,37,'#e84e9a');rect(85,102+bob,5,6,'#ffc6dc');rect(99,102+bob,5,6,'#ffc6dc');rect(87,110+bob,3,3,'#fff0c9');rect(87,120+bob,3,3,'#fff0c9');rect(82,128+bob,25,4,'#c93b84')}
-    if(state.top==='sweater'){rect(65,97+bob,63,48,hairOutline);rect(59,106+bob,18,41,hairOutline);rect(110,106+bob,18,41,hairOutline);rect(68,100+bob,57,42,'#f0b47e');rect(62,109+bob,12,35,'#e8a36e');rect(116,109+bob,12,35,'#e8a36e');rect(82,108+bob,29,5,'#fff0c8');rect(89,119+bob,15,5,'#d88966')}
-    if(state.top==='hoodie'){rect(63,98+bob,66,49,hairOutline);rect(56,108+bob,19,41,hairOutline);rect(117,108+bob,19,41,hairOutline);rect(66,101+bob,60,43,'#906eb0');rect(59,111+bob,13,35,'#80609d');rect(119,111+bob,13,35,'#80609d');rect(80,101+bob,32,17,'#6b508a');rect(85,112+bob,20,4,'#e6b1cf')}
-    if(state.top==='raincoat'){rect(64,96+bob,64,52,hairOutline);rect(57,105+bob,19,43,hairOutline);rect(116,105+bob,19,43,hairOutline);rect(67,99+bob,58,46,'#e2b84e');rect(60,108+bob,13,38,'#d9aa3b');rect(118,108+bob,13,38,'#d9aa3b');rect(83,101+bob,26,43,'#f7dd77');rect(87,111+bob,18,4,'#9a7650')}
-    // Braços e mãos em pele clara, com as mangas por cima dos ombros.
+    if (state.bottom === 'skirt') {rect(54,139+bob,79,38,hairOutline);rect(63,133+bob,61,10,'#8fc6e2');rect(57,142+bob,73,31,'#78b2d4');rect(63,168+bob,61,7,'#4b86ad');rect(73,143+bob,6,26,'#a9d8ea');rect(101,143+bob,6,26,'#a9d8ea');}
+    if (state.bottom === 'shorts') {rect(61,132+bob,65,40,hairOutline);rect(64,135+bob,59,17,'#527fa3');rect(64,148+bob,27,22,'#416981');rect(95,148+bob,28,22,'#416981');rect(91,151+bob,4,19,skin);}
+    if (state.bottom === 'tutu') {rect(51,140+bob,85,36,hairOutline);rect(60,137+bob,67,9,'#f3a3c0');rect(54,146+bob,79,22,'#f6c9df');rect(61,155+bob,65,18,'#e994bc');rect(56,143+bob,73,3,'#fff1f5');}
+    if (state.top === 'jacket') {rect(66,96+bob,57,45,hairOutline);rect(60,104+bob,18,44,hairOutline);rect(110,104+bob,18,44,hairOutline);rect(69,99+bob,51,39,'#72b7d9');rect(63,107+bob,12,38,'#92cde6');rect(113,107+bob,12,38,'#92cde6');rect(79,97+bob,31,42,hairOutline);rect(82,100+bob,25,37,'#e84e9a');rect(85,102+bob,5,6,'#ffc6dc');rect(99,102+bob,5,6,'#ffc6dc');rect(87,110+bob,3,3,'#fff0c9');rect(87,120+bob,3,3,'#fff0c9');rect(82,128+bob,25,4,'#c93b84');}
+    if (state.top === 'sweater') {rect(65,97+bob,63,48,hairOutline);rect(59,106+bob,18,41,hairOutline);rect(110,106+bob,18,41,hairOutline);rect(68,100+bob,57,42,'#f0b47e');rect(62,109+bob,12,35,'#e8a36e');rect(116,109+bob,12,35,'#e8a36e');rect(82,108+bob,29,5,'#fff0c8');rect(89,119+bob,15,5,'#d88966');}
+    if (state.top === 'hoodie') {rect(63,98+bob,66,49,hairOutline);rect(56,108+bob,19,41,hairOutline);rect(117,108+bob,19,41,hairOutline);rect(66,101+bob,60,43,'#906eb0');rect(59,111+bob,13,35,'#80609d');rect(119,111+bob,13,35,'#80609d');rect(80,101+bob,32,17,'#6b508a');rect(85,112+bob,20,4,'#e6b1cf');}
+    if (state.top === 'raincoat') {rect(64,96+bob,64,52,hairOutline);rect(57,105+bob,19,43,hairOutline);rect(116,105+bob,19,43,hairOutline);rect(67,99+bob,58,46,'#e2b84e');rect(60,108+bob,13,38,'#d9aa3b');rect(118,108+bob,13,38,'#d9aa3b');rect(83,101+bob,26,43,'#f7dd77');rect(87,111+bob,18,4,'#9a7650');}
     rect(55,115+bob,14,31,skinShade);rect(57,117+bob,10,27,skin);rect(53,136+bob,16,11,skinShade);rect(54,138+bob,14,8,skin);rect(56,139+bob,5,3,skinLight);
     rect(121,115+bob,14,31,skinShade);rect(123,117+bob,10,27,skin);rect(121,136+bob,16,11,skinShade);rect(122,138+bob,14,8,skin);rect(124,139+bob,5,3,skinLight);
-    // Sapatos combináveis.
-    if(state.shoes==='boots'){rect(67,198+bob,22,10,'#292d3b');rect(99,198+bob,22,10,'#292d3b');rect(70,195+bob,16,6,'#5e80a0');rect(102,195+bob,16,6,'#5e80a0')}
-    if(state.shoes==='sneakers'){rect(66,198+bob,25,8,'#fff');rect(98,198+bob,25,8,'#fff');rect(70,195+bob,16,5,'#e85d79');rect(102,195+bob,16,5,'#e85d79')}
-    if(state.shoes==='maryjanes'){rect(67,198+bob,22,9,'#8e4e64');rect(100,198+bob,22,9,'#8e4e64');rect(72,197+bob,14,3,'#f6d16e');rect(105,197+bob,14,3,'#f6d16e')}
-    // Variações de acabamento costurado, sem adereços no cabelo ou no corpo.
-    if(state.detail==='buttons'){rect(76,111+bob,4,4,'#fff0c9');rect(76,122+bob,4,4,'#fff0c9')}
-    if(state.detail==='pocket'){rect(108,116+bob,10,9,'#4d8eb6');rect(110,118+bob,6,2,'#a9d8ea');rect(107,115+bob,12,2,'#3f7598')}
-    if(state.detail==='cuffs'){rect(63,136+bob,12,3,'#f4d8cc');rect(113,136+bob,12,3,'#f4d8cc')}
-  };
-  const updateMessage=()=>{const parts=Object.values(state).slice(0,5).map((v,i)=>Object.values(copy)[i][v]);message.textContent=`Mimi escolheu ${parts[1]}, ${parts[2]} e ${parts[4]}.`};
-  buttons.forEach(button=>button.addEventListener('click',()=>{const slot=button.dataset.slot;state[slot]=button.dataset.value;buttons.filter(b=>b.dataset.slot===slot).forEach(b=>b.classList.toggle('is-selected',b===button));lookNumber=(lookNumber%9)+1;stageLook.textContent=String(lookNumber).padStart(2,'0');document.querySelector('#game-look').textContent=`Mimi ${String(lookNumber).padStart(2,'0')}`;updateMessage()}));
-  tabs.forEach(tab=>tab.addEventListener('click',()=>{const slot=tab.dataset.slotTab;tabs.forEach(t=>t.classList.toggle('is-active',t===tab));panels.forEach(p=>p.classList.toggle('is-visible',p.dataset.slotPanel===slot))}));
-  scenes.forEach(scene=>scene.addEventListener('click',()=>{state.scene=scene.dataset.scene;scenes.forEach(s=>s.classList.toggle('is-selected',s===scene))}));
-  document.querySelector('.mimi-random')?.addEventListener('click',()=>{Object.keys(state).slice(0,5).forEach(slot=>{const choices=buttons.filter(b=>b.dataset.slot===slot);const choice=choices[Math.floor(Math.random()*choices.length)];state[slot]=choice.dataset.value;choices.forEach(b=>b.classList.toggle('is-selected',b===choice))});lookNumber=(lookNumber%9)+1;stageLook.textContent=String(lookNumber).padStart(2,'0');document.querySelector('#game-look').textContent=`Mimi ${String(lookNumber).padStart(2,'0')}`;updateMessage()});
-  document.querySelector('.mimi-reset')?.addEventListener('click', () => {
-    Object.assign(state, {hair:'brown', top:'jacket', bottom:'skirt', shoes:'boots', detail:'none', scene:'wood'});
-    buttons.forEach(b => b.classList.toggle('is-selected', (b.dataset.slot === 'hair' && b.dataset.value === 'brown') || (b.dataset.slot === 'top' && b.dataset.value === 'jacket') || (b.dataset.slot === 'bottom' && b.dataset.value === 'skirt') || (b.dataset.slot === 'shoes' && b.dataset.value === 'boots') || (b.dataset.slot === 'detail' && b.dataset.value === 'none')));
-    scenes.forEach(s => s.classList.toggle('is-selected', s.dataset.scene === 'wood'));
-    lookNumber = 1; stageLook.textContent = '01'; document.querySelector('#game-look').textContent = 'Mimi 01'; updateMessage();
+    if (state.shoes === 'boots') {rect(67,198+bob,22,10,'#292d3b');rect(99,198+bob,22,10,'#292d3b');rect(70,195+bob,16,6,'#5e80a0');rect(102,195+bob,16,6,'#5e80a0');}
+    if (state.shoes === 'sneakers') {rect(66,198+bob,25,8,'#292d3b');rect(98,198+bob,25,8,'#292d3b');rect(68,196+bob,21,5,'#fff');rect(100,196+bob,21,5,'#fff');rect(70,195+bob,16,3,'#e85d79');rect(102,195+bob,16,3,'#e85d79');}
+    if (state.shoes === 'maryjanes') {rect(67,198+bob,22,9,'#292d3b');rect(100,198+bob,22,9,'#292d3b');rect(69,196+bob,18,5,'#8e4e64');rect(102,196+bob,18,5,'#8e4e64');rect(72,197+bob,14,2,'#f6d16e');rect(105,197+bob,14,2,'#f6d16e');}
+    if (state.detail === 'buttons') {rect(76,111+bob,4,4,'#fff0c9');rect(76,122+bob,4,4,'#fff0c9');}
+    if (state.detail === 'pocket') {rect(108,116+bob,10,9,'#4d8eb6');rect(110,118+bob,6,2,'#a9d8ea');rect(107,115+bob,12,2,'#3f7598');}
+    if (state.detail === 'cuffs') {rect(63,136+bob,12,3,'#f4d8cc');rect(113,136+bob,12,3,'#f4d8cc');}
+  }
+
+  function render() {
+    frame += 1;
+    drawScene();
+    drawCharacter();
+    requestAnimationFrame(render);
+  }
+
+  function currentLocale() { return locale(); }
+  function labelFor(slot, value) {
+    const button = choices.find((item) => item.dataset.slot === slot && item.dataset.value === value);
+    const label = button?.querySelector('[data-pt][data-en]');
+    return label ? label.dataset[currentLocale()] : value;
+  }
+  function refreshLookNumber() {
+    const number = String(lookNumber).padStart(2, '0');
+    if (lookLabel) lookLabel.textContent = `Mimi ${number}`;
+    if (stageLook) stageLook.textContent = number;
+  }
+  function nextLook() {
+    lookNumber = (lookNumber % 99) + 1;
+    refreshLookNumber();
+  }
+  function say(kind = 'change') {
+    if (!message) return;
+    const en = currentLocale() === 'en';
+    const summary = `${labelFor('top', state.top)}, ${labelFor('bottom', state.bottom)}, ${labelFor('shoes', state.shoes)}`;
+    if (kind === 'random') message.textContent = en ? `Random look ready: ${summary}.` : `Combinação sorteada: ${summary}.`;
+    else if (kind === 'saved') message.textContent = en ? 'Your pixel look was downloaded.' : 'Seu look pixel foi baixado.';
+    else if (kind === 'scene') message.textContent = en ? 'Scene changed. Your look stays the same.' : 'Cenário trocado; seu look continua igual.';
+    else message.textContent = en ? `Mimi is wearing ${summary}.` : `Mimi está usando ${summary}.`;
+  }
+  function selectChoice(slot, value) {
+    state[slot] = value;
+    choices.filter((button) => button.dataset.slot === slot).forEach((button) => {
+      const selected = button.dataset.value === value;
+      button.classList.toggle('is-selected', selected);
+      button.setAttribute('aria-pressed', String(selected));
+    });
+  }
+  function setActiveTab(slot, focus = false) {
+    tabs.forEach((tab) => {
+      const active = tab.dataset.slotTab === slot;
+      tab.classList.toggle('is-active', active);
+      tab.setAttribute('aria-selected', String(active));
+      tab.tabIndex = active ? 0 : -1;
+      if (active && focus) tab.focus();
+    });
+    panels.forEach((panel) => {
+      const active = panel.dataset.slotPanel === slot;
+      panel.classList.toggle('is-visible', active);
+      panel.hidden = !active;
+    });
+  }
+  function updateLabels() {
+    const language = currentLocale();
+    document.querySelectorAll('[data-pt][data-en]').forEach((element) => {
+      const text = element.dataset[language];
+      if (text) element.textContent = text;
+    });
+    document.querySelectorAll('[data-pt-aria][data-en-aria]').forEach((element) => {
+      const label = element.dataset[`${language}Aria`];
+      if (label) element.setAttribute('aria-label', label);
+    });
+  }
+  window.updateDressupLabels = updateLabels;
+  updateLabels();
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => setActiveTab(tab.dataset.slotTab));
+    tab.addEventListener('keydown', (event) => {
+      if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      let next = index;
+      if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+      if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+      if (event.key === 'Home') next = 0;
+      if (event.key === 'End') next = tabs.length - 1;
+      setActiveTab(tabs[next].dataset.slotTab, true);
+    });
   });
-  const animate=()=>{frame++;draw();requestAnimationFrame(animate)};draw();animate();
+  choices.forEach((button) => button.addEventListener('click', () => {
+    selectChoice(button.dataset.slot, button.dataset.value);
+    nextLook();
+    say();
+  }));
+  scenes.forEach((button) => button.addEventListener('click', () => {
+    state.scene = button.dataset.scene;
+    if (stage) stage.dataset.scene = state.scene;
+    scenes.forEach((sceneButton) => {
+      const selected = sceneButton === button;
+      sceneButton.classList.toggle('is-selected', selected);
+      sceneButton.setAttribute('aria-pressed', String(selected));
+    });
+    say('scene');
+  }));
+  document.querySelector('.mimi-random')?.addEventListener('click', () => {
+    slots.forEach((slot) => {
+      const slotChoices = choices.filter((button) => button.dataset.slot === slot);
+      const pick = slotChoices[Math.floor(Math.random() * slotChoices.length)];
+      selectChoice(slot, pick.dataset.value);
+    });
+    nextLook();
+    say('random');
+  });
+  document.querySelector('.mimi-reset')?.addEventListener('click', () => {
+    slots.forEach((slot) => selectChoice(slot, defaults[slot]));
+    state.scene = defaults.scene;
+    if (stage) stage.dataset.scene = state.scene;
+    scenes.forEach((button) => {
+      const selected = button.dataset.scene === state.scene;
+      button.classList.toggle('is-selected', selected);
+      button.setAttribute('aria-pressed', String(selected));
+    });
+    setActiveTab('hair');
+    lookNumber = 1;
+    refreshLookNumber();
+    const en = currentLocale() === 'en';
+    message.textContent = en ? 'Mimi is ready to build a look.' : 'A Mimi está pronta para montar um look.';
+  });
+  document.querySelector('#save-look')?.addEventListener('click', () => {
+    const output = document.createElement('canvas');
+    output.width = canvas.width * 3;
+    output.height = canvas.height * 3;
+    const out = output.getContext('2d');
+    out.imageSmoothingEnabled = false;
+    out.drawImage(canvas, 0, 0, output.width, output.height);
+    const link = document.createElement('a');
+    link.download = `vista-a-dev-mimi-${String(lookNumber).padStart(2, '0')}.png`;
+    link.href = output.toDataURL('image/png');
+    link.click();
+    say('saved');
+  });
+
+  setActiveTab('hair');
+  scenes.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.scene === state.scene)));
+  refreshLookNumber();
+  render();
 })();
 /* LANGUAGE SWITCHER — Portuguese / English */
 (() => {
@@ -228,8 +386,8 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape' && mo
     'tcchat-design':{kind:'DESIGN · ARCHITECTURE',desc:'Visual study organizing dashboards, profiles, permissions, groups and states before implementation.',role:'Flows and visual language for different user profiles.',practice:'Screen architecture and design system.',details:[['GOAL','Give the product shape before building it.'],['STRUCTURE','Dashboards, profiles, groups and progress.'],['LEARNING','Design connects rules, people and development.'],['NEXT STEP','Consolidate the design system in a navigable prototype.']],link:'open in Figma'}
   };
   const text = {
-    en:{nav:['about','skills','projects','play','contact'],heroEyebrow:'PORTFOLIO / EDUARDA DE SOUZA TEIXEIRA',hero:'I turn<br><em>curiosity</em><br>into products.',intro:'Developer in training, Systems Development student and creator of digital experiences that mix code, design and the joy of discovering.',projectsButton:'view my projects',aboutLabel:'01 / ABOUT ME',aboutNote:'still learning,<br>already creating.',aboutEyebrow:'NICE TO MEET YOU, I AM EDUARDA',aboutTitle:'A <em>curious</em><br>mind.',skillsLabel:'02 / TOOLS',projectsLabel:'03 / PROJECTS',gameLabel:'04 / PLAYGROUND',experienceLabel:'05 / PRACTICAL EXPERIENCE',contactLabel:'06 / CONTACT',projectSide:'what I created<br>to learn by doing.',projectIntro:'Every project shows part of my process: the problem I found, the decisions I made, what I built and what I still want to improve.',filters:['all','web','mobile','academic','personal'],gameTitle:'Dress up<br><em>the Dev.</em>',gameIntro:'A brand-new dress-up game: choose Mimi’s clothes, switch the scene and build a look with your own mood.',gameBadge:'✦ studio open',gameControls:'STYLE MIMI',gameName:'style your Dev',gameDesc:'She is always the same girl: dark wavy hair, hazel-green eyes and lots of personality. You decide how she goes out for the day.',start:'choose your look',stars:'look',time:'mood',gameReady:'Mimi is ready for her first little adventure.',experienceTitle:'Learning<br>by doing.',experienceText:'I am building my first formal professional experience, but I have already developed complete systems and interfaces from concept to implementation.',contactTitle:'Let’s create<br>something <em>beautiful?</em>',contactText:'I am looking for an internship or first opportunity in technology, systems development or digital media.',email:'send an email',modalLabels:['WHAT THIS PROJECT SOLVES','MY CONTRIBUTION','HOW I THOUGHT ABOUT IT','WHAT WAS BUILT','TECHNOLOGIES','WHAT I LEARNED','NEXT STEP']},
-    pt:{nav:['sobre','skills','projetos','play','contato'],heroEyebrow:'PORTFÓLIO / EDUARDA DE SOUZA TEIXEIRA',hero:'Eu transformo<br><em>curiosidade</em><br>em produto.',intro:'Desenvolvedora em formação, estudante de Desenvolvimento de Sistemas e criadora de experiências digitais que misturam código, design e vontade de descobrir.',projectsButton:'ver meus projetos',aboutLabel:'01 / QUEM ESTÁ POR TRÁS',aboutNote:'ainda aprendendo,<br>já fazendo.',aboutEyebrow:'PRAZER, EU SOU A EDUARDA',aboutTitle:'Uma mente<br><em>curiosa.</em>',skillsLabel:'02 / FERRAMENTAS',projectsLabel:'03 / PROJETOS',gameLabel:'04 / PLAYGROUND',experienceLabel:'05 / EXPERIÊNCIA PRÁTICA',contactLabel:'06 / CONTATO',projectSide:'o que eu criei<br>para aprender fazendo.',projectIntro:'Cada projeto mostra uma parte do meu processo: o problema que encontrei, as decisões que tomei, o que eu construí e o que ainda quero melhorar.',filters:['todos','web','mobile','acadêmicos','pessoais'],gameTitle:'Vista a<br><em>Dev.</em>',gameIntro:'Uma nova brincadeira de vestir: escolha as roupas da Mimi, troque o cenário e monte um look com o seu humor.',gameBadge:'✦ ateliê aberto',gameControls:'MONTE A MIMI',gameName:'monte seu look',gameDesc:'Ela é sempre a mesma menina: cabelo escuro e ondulado, olhos verde-avelã e muita personalidade. Agora você decide como ela sai para o dia.',start:'escolha seu look',stars:'look',time:'humor',gameReady:'a Mimi está pronta para o primeiro passeio.',experienceTitle:'Aprender<br>fazendo.',experienceText:'Ainda estou construindo minha primeira experiência profissional formal, mas já desenvolvi sistemas e interfaces completos do conceito à implementação.',contactTitle:'Vamos criar<br>algo <em>bonito?</em>',contactText:'Estou buscando uma oportunidade de estágio ou primeira experiência em tecnologia, desenvolvimento de sistemas ou meios digitais.',email:'enviar e-mail',modalLabels:['O QUE ESTE PROJETO RESOLVE','MINHA CONTRIBUIÇÃO','COMO PENSEI','O QUE FOI CONSTRUÍDO','TECNOLOGIAS','O QUE APRENDI','PRÓXIMO PASSO']}
+    en:{nav:['about','skills','projects','play','contact'],heroEyebrow:'PORTFOLIO / EDUARDA DE SOUZA TEIXEIRA',hero:'I turn<br><em>curiosity</em><br>into products.',intro:'Developer in training, Systems Development student and creator of digital experiences that mix code, design and the joy of discovering.',projectsButton:'view my projects',aboutLabel:'01 / ABOUT ME',aboutNote:'still learning,<br>already creating.',aboutEyebrow:'NICE TO MEET YOU, I AM EDUARDA',aboutTitle:'A <em>curious</em><br>mind.',skillsLabel:'02 / TOOLS',projectsLabel:'03 / PROJECTS',gameLabel:'04 / PLAYGROUND',experienceLabel:'05 / PRACTICAL EXPERIENCE',contactLabel:'06 / CONTACT',projectSide:'what I created<br>to learn by doing.',projectIntro:'Every project shows part of my process: the problem I found, the decisions I made, what I built and what I still want to improve.',filters:['all','web','mobile','academic','personal'],gameTitle:'Dress up<br><em>the Dev.</em>',gameIntro:'One pixel doll, endless outfits. Mix pieces, change the scene and make Mimi’s little studio yours.',gameBadge:'✦ studio open',gameControls:'STYLE MIMI',gameName:'style your Dev',gameDesc:'She is always the same girl: dark wavy hair, hazel-green eyes and lots of personality. You decide how she goes out for the day.',start:'download my look',stars:'look',time:'mood',gameReady:'Mimi is ready for her first little adventure.',experienceTitle:'Learning<br>by doing.',experienceText:'I am building my first formal professional experience, but I have already developed complete systems and interfaces from concept to implementation.',contactTitle:'Let’s create<br>something <em>beautiful?</em>',contactText:'I am looking for an internship or first opportunity in technology, systems development or digital media.',email:'send an email',modalLabels:['WHAT THIS PROJECT SOLVES','MY CONTRIBUTION','HOW I THOUGHT ABOUT IT','WHAT WAS BUILT','TECHNOLOGIES','WHAT I LEARNED','NEXT STEP']},
+    pt:{nav:['sobre','skills','projetos','play','contato'],heroEyebrow:'PORTFÓLIO / EDUARDA DE SOUZA TEIXEIRA',hero:'Eu transformo<br><em>curiosidade</em><br>em produto.',intro:'Desenvolvedora em formação, estudante de Desenvolvimento de Sistemas e criadora de experiências digitais que misturam código, design e vontade de descobrir.',projectsButton:'ver meus projetos',aboutLabel:'01 / QUEM ESTÁ POR TRÁS',aboutNote:'ainda aprendendo,<br>já fazendo.',aboutEyebrow:'PRAZER, EU SOU A EDUARDA',aboutTitle:'Uma mente<br><em>curiosa.</em>',skillsLabel:'02 / FERRAMENTAS',projectsLabel:'03 / PROJETOS',gameLabel:'04 / PLAYGROUND',experienceLabel:'05 / EXPERIÊNCIA PRÁTICA',contactLabel:'06 / CONTATO',projectSide:'o que eu criei<br>para aprender fazendo.',projectIntro:'Cada projeto mostra uma parte do meu processo: o problema que encontrei, as decisões que tomei, o que eu construí e o que ainda quero melhorar.',filters:['todos','web','mobile','acadêmicos','pessoais'],gameTitle:'Vista a<br><em>Dev.</em>',gameIntro:'Uma bonequinha pixel art, infinitas combinações. Misture roupas, escolha o cenário e deixe o ateliê da Mimi com a sua cara.',gameBadge:'✦ ateliê aberto',gameControls:'MONTE A MIMI',gameName:'monte seu look',gameDesc:'Ela é sempre a mesma menina: cabelo escuro e ondulado, olhos verde-avelã e muita personalidade. Agora você decide como ela sai para o dia.',start:'baixar meu look',stars:'look',time:'humor',gameReady:'a Mimi está pronta para o primeiro passeio.',experienceTitle:'Aprender<br>fazendo.',experienceText:'Ainda estou construindo minha primeira experiência profissional formal, mas já desenvolvi sistemas e interfaces completos do conceito à implementação.',contactTitle:'Vamos criar<br>algo <em>bonito?</em>',contactText:'Estou buscando uma oportunidade de estágio ou primeira experiência em tecnologia, desenvolvimento de sistemas ou meios digitais.',email:'enviar e-mail',modalLabels:['O QUE ESTE PROJETO RESOLVE','MINHA CONTRIBUIÇÃO','COMO PENSEI','O QUE FOI CONSTRUÍDO','TECNOLOGIAS','O QUE APRENDI','PRÓXIMO PASSO']}
   };
   const apply = () => {
     const t = text[lang]; document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
@@ -238,7 +396,7 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape' && mo
     set('.hero .eyebrow',t.heroEyebrow); set('.hero h1',t.hero); setText('.hero-intro',t.intro); setText('.hero-cta .btn.solid',t.projectsButton+' ↓');
     setText('#sobre .section-top>span:first-child',t.aboutLabel); set('#sobre .side-note',t.aboutNote); setText('#sobre .eyebrow',t.aboutEyebrow); set('#sobre h2',t.aboutTitle);
     setText('#skills .section-top>span:first-child',t.skillsLabel); setText('#projetos .section-top>span:first-child',t.projectsLabel); setText('#game .section-top>span:first-child',t.gameLabel); setText('#experiencia .section-top>span:first-child',t.experienceLabel); setText('#contato .contact-paper>.mono',t.contactLabel);
-    setText('.projects .side-note',t.projectSide); setText('.projects-intro>p',t.projectIntro); set('#game h2',t.gameTitle); setText('.game-heading>p',t.gameIntro); setText('.game-badge',t.gameBadge); setText('.game-copy>.mono',t.gameControls); setText('.game-copy h3',t.gameName); setText('.game-copy>p:not(.mono):not(.game-message)',t.gameDesc); setText('.game-start',t.start+' ↗'); set('.game-stats span:first-child',`${t.stars} <b id="game-look">Mimi 01</b>`); set('.game-stats span:nth-child(2)',`${t.time} <b>ativa</b>`); setText('#game-message',t.gameReady);
+    setText('.projects .side-note',t.projectSide); setText('.projects-intro>p',t.projectIntro); set('#game h2',t.gameTitle); setText('.game-heading>p',t.gameIntro); setText('.game-badge',t.gameBadge); setText('.vista-wardrobe-intro>.mono',t.gameControls); setText('.game-copy h3',t.gameName); setText('.vista-wardrobe-intro>p:not(.mono)',t.gameDesc); setText('.game-start .vg-action-label',t.start); set('.game-stats span:first-child',`${t.stars} <b id="game-look">Mimi 01</b>`); set('.game-stats span:nth-child(2)',`${t.time} <b>ativa</b>`); setText('#game-message',t.gameReady); window.updateDressupLabels?.();
     set('#experiencia h2',t.experienceTitle); setText('#experiencia .experience-grid>div>p',t.experienceText); set('#contato h2',t.contactTitle); setText('#contato .contact-paper>p',t.contactText); setText('.contact-links .btn',t.email+' ↗');
     if(lang==='en'){
       const about=['I have knowledge in Systems Development, mainly HTML, CSS, JavaScript, PHP, React and React Native. I also work with Firebase and intermediate SQL, authentication, CRUD, database integration and responsive interfaces.','In design, I am comfortable with Canva and have experience with Figma for layouts and prototypes. I have also used InDesign, have basic knowledge of Photoshop and other Adobe tools, and use CapCut to edit videos and content.','Alongside academic projects, I create personal projects to practice and learn new technologies. I am curious, learn quickly and enjoy looking for solutions when I find something I do not know yet.']; $$('.manifesto-text>p').forEach((el,i)=>{if(about[i])el.textContent=about[i];}); set('.signature','made with<br><em>curiosity + care</em> <span>✦</span>');
