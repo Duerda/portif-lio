@@ -129,38 +129,66 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape' && mo
   };
   const draw=()=>{
     const bob=Math.round(Math.sin(frame/18)*2), blink=Math.floor(frame%180)>174; drawScene();
+    const skin='#f6d9c5', skinLight='#ffe9db', skinShade='#dfb29e';
+    const hair=state.hair==='cocoa'?'#302129':state.hair==='honey'?'#38231f':'#241c23';
+    const hairMid='#3a2930', hairLight='#52383b', hairGlint='#68484a';
     rect(50,207,78,4,'#765043');rect(60,211,58,2,'#a26f57');
-    // cabelo escuro e ondulado, mesma característica em todos os looks
-    const hair=state.hair==='cocoa'?'#2f252d':'#3b2930';rect(63,36+bob,55,7,hair);rect(55,45+bob,72,46,hair);rect(48,58+bob,13,55,hair);rect(118,57+bob,14,59,hair);rect(55,94+bob,10,30,hair);rect(115,94+bob,10,30,hair);
-    if(state.hair==='honey'){rect(67,31+bob,43,6,'#51343a');rect(60,37+bob,8,17,'#51343a');rect(108,36+bob,8,18,'#51343a')}
-    // rosto claro, olhos grandes verde-avelã e franja ondulada
-    rect(66,49+bob,48,38,'#f8dfca');rect(61,58+bob,58,19,'#f8dfca');rect(72,82+bob,35,11,'#f8dfca');
-    rect(63,52+bob,9,13,hair);rect(70,45+bob,18,8,hair);rect(87,45+bob,18,8,hair);rect(105,51+bob,10,15,hair);
-    // ondas e mechas com desenho em degraus, mantendo o pixel art
-    const wave='#5a3b43';rect(49,47+bob,7,8,wave);rect(46,58+bob,7,11,wave);rect(49,71+bob,6,10,wave);rect(53,82+bob,7,8,wave);rect(116,47+bob,7,8,wave);rect(121,57+bob,7,12,wave);rect(119,70+bob,8,10,wave);rect(115,82+bob,7,9,wave);
-    rect(57,39+bob,7,4,'#6a454a');rect(105,39+bob,7,4,'#6a454a');rect(54,94+bob,6,13,'#6a454a');rect(119,94+bob,6,13,'#6a454a');
-    // olhos: branco quente, íris verde com anel castanho, pupila e brilho
-    if(blink){rect(73,67+bob,11,2,'#513b35');rect(97,67+bob,11,2,'#513b35')}else{rect(72,61+bob,13,12,'#fffaf2');rect(96,61+bob,13,12,'#fffaf2');rect(75,63+bob,8,8,'#8fa967');rect(99,63+bob,8,8,'#8fa967');rect(77,64+bob,5,6,'#536540');rect(101,64+bob,5,6,'#536540');rect(78,64+bob,3,3,'#29372f');rect(102,64+bob,3,3,'#29372f');rect(74,61+bob,3,2,'#fff');rect(98,61+bob,3,2,'#fff')}
-    rect(66,73+bob,7,3,'#efb4a9');rect(105,73+bob,7,3,'#efb4a9');rect(88,76+bob,6,2,'#d28b7b');rect(84,83+bob,14,2,'#bb6b73');rect(80,91+bob,20,11,'#f8dfca');
-    // pernas
-    rect(70,169+bob,16,34,'#f8dfca');rect(101,169+bob,16,34,'#f8dfca');
-    // saia / bottom
+    // Silhueta traseira: cabelo comprido em ondas assimétricas, feito em degraus.
+    rect(67,35+bob,45,8,hair);rect(60,40+bob,60,9,hair);rect(56,47+bob,68,12,hair);
+    rect(52,55+bob,15,15,hair);rect(49,67+bob,15,15,hair);rect(51,80+bob,15,15,hair);rect(55,92+bob,14,15,hair);rect(52,104+bob,15,13,hair);rect(56,115+bob,13,13,hair);rect(62,126+bob,10,5,hair);
+    rect(113,54+bob,15,15,hair);rect(117,66+bob,15,15,hair);rect(116,79+bob,15,15,hair);rect(111,91+bob,15,15,hair);rect(115,103+bob,14,14,hair);rect(111,115+bob,13,12,hair);rect(106,125+bob,10,6,hair);
+    // Camadas alternadas de sombra e brilho para dar volume às ondas.
+    rect(53,62+bob,5,9,hairMid);rect(59,75+bob,5,8,hairLight);rect(55,88+bob,5,9,hairMid);rect(59,101+bob,5,9,hairLight);rect(56,113+bob,5,9,hairMid);rect(62,122+bob,5,7,hairLight);
+    rect(121,61+bob,5,9,hairMid);rect(118,74+bob,5,9,hairLight);rect(122,87+bob,5,9,hairMid);rect(117,100+bob,5,9,hairLight);rect(119,112+bob,5,9,hairMid);rect(112,122+bob,5,7,hairLight);
+    rect(68,40+bob,9,3,hairLight);rect(81,38+bob,11,3,hairMid);rect(99,40+bob,10,3,hairGlint);rect(65,48+bob,6,3,hairGlint);rect(107,48+bob,7,3,hairMid);
+    // Orelhas, pescoço e rosto claro com contorno de pixels macio.
+    rect(61,68+bob,7,14,skinShade);rect(63,69+bob,5,11,skin);rect(112,68+bob,7,14,skinShade);rect(112,69+bob,5,11,skin);
+    rect(67,49+bob,45,5,skin);rect(64,54+bob,51,9,skin);rect(63,62+bob,54,20,skin);rect(65,81+bob,50,10,skin);rect(70,90+bob,40,7,skin);rect(77,96+bob,27,5,skin);
+    rect(76,99+bob,27,13,skin);rect(78,99+bob,22,3,skinLight);
+    // Franja em cachos pixelados, aberta no centro para deixar os olhos livres.
+    rect(66,47+bob,49,7,hair);rect(63,51+bob,12,8,hair);rect(69,55+bob,10,5,hairMid);rect(77,51+bob,12,10,hair);rect(84,55+bob,8,6,hairLight);
+    rect(91,50+bob,12,10,hair);rect(97,55+bob,9,5,hairMid);rect(103,50+bob,11,8,hair);rect(108,55+bob,7,6,hairLight);
+    // Mechas laterais curvas que emolduram o rosto e se unem às ondas longas.
+    rect(63,58+bob,6,12,hair);rect(65,68+bob,6,10,hairMid);rect(63,77+bob,7,11,hair);rect(66,86+bob,7,10,hairMid);rect(70,94+bob,6,6,hair);
+    rect(111,58+bob,6,12,hair);rect(110,68+bob,6,10,hairMid);rect(112,77+bob,7,11,hair);rect(109,86+bob,7,10,hairMid);rect(106,94+bob,6,6,hair);
+    rect(65,62+bob,3,6,hairGlint);rect(67,81+bob,3,6,hairLight);rect(112,61+bob,3,6,hairGlint);rect(110,81+bob,3,6,hairLight);
+    // Sobrancelhas delicadas e olhos verde-avelã com aro, profundidade e brilhos.
+    rect(72,60+bob,5,2,hairMid);rect(77,58+bob,7,2,hairMid);rect(98,58+bob,7,2,hairMid);rect(105,60+bob,5,2,hairMid);
+    if(blink){rect(73,69+bob,12,2,'#493637');rect(97,69+bob,12,2,'#493637');rect(74,71+bob,10,1,'#b87972');rect(98,71+bob,10,1,'#b87972')}
+    else{
+      rect(72,63+bob,14,14,'#493638');rect(96,63+bob,14,14,'#493638');
+      rect(73,64+bob,12,12,'#fffaf1');rect(97,64+bob,12,12,'#fffaf1');
+      rect(75,65+bob,8,10,'#755b3d');rect(99,65+bob,8,10,'#755b3d');
+      rect(76,65+bob,7,9,'#91a965');rect(100,65+bob,7,9,'#91a965');
+      rect(78,66+bob,4,7,'#52663f');rect(102,66+bob,4,7,'#52663f');
+      rect(79,66+bob,3,6,'#29332d');rect(103,66+bob,3,6,'#29332d');
+      rect(74,64+bob,4,3,'#fff');rect(98,64+bob,4,3,'#fff');rect(82,71+bob,2,2,'#e6f0cf');rect(106,71+bob,2,2,'#e6f0cf');
+      rect(72,62+bob,5,2,hairMid);rect(81,63+bob,4,2,hairMid);rect(96,63+bob,4,2,hairMid);rect(105,62+bob,5,2,hairMid);
+    }
+    // Blush discreto, nariz mínimo e sorriso pequeno e acolhedor.
+    rect(70,81+bob,4,2,'#edb5a9');rect(74,82+bob,5,3,'#f0bdb1');rect(79,81+bob,3,2,'#edb5a9');
+    rect(103,81+bob,3,2,'#edb5a9');rect(106,82+bob,5,3,'#f0bdb1');rect(111,81+bob,3,2,'#edb5a9');
+    rect(89,78+bob,3,3,skinShade);rect(91,80+bob,3,2,'#cf9183');
+    rect(86,88+bob,9,2,'#a95f68');rect(84,87+bob,3,2,'#a95f68');rect(95,87+bob,3,2,'#a95f68');rect(88,90+bob,7,1,'#da8790');
+    // Pernas em tom de pele consistente.
+    rect(70,169+bob,16,34,skin);rect(101,169+bob,16,34,skin);rect(71,170+bob,3,24,skinLight);rect(102,170+bob,3,24,skinLight);
+    // Saia / parte inferior combinável.
     if(state.bottom==='skirt'){rect(63,133+bob,61,10,'#8fc6e2');rect(57,142+bob,73,31,'#78b2d4');rect(63,168+bob,61,7,'#4b86ad');rect(73,143+bob,6,26,'#a9d8ea');rect(101,143+bob,6,26,'#a9d8ea')}
-    if(state.bottom==='shorts'){rect(64,135+bob,59,17,'#527fa3');rect(64,148+bob,27,22,'#416981');rect(95,148+bob,28,22,'#416981');rect(91,151+bob,4,19,'#f8dfca')}
+    if(state.bottom==='shorts'){rect(64,135+bob,59,17,'#527fa3');rect(64,148+bob,27,22,'#416981');rect(95,148+bob,28,22,'#416981');rect(91,151+bob,4,19,skin)}
     if(state.bottom==='tutu'){rect(60,137+bob,67,9,'#f3a3c0');rect(54,146+bob,79,22,'#f6c9df');rect(61,155+bob,65,18,'#e994bc');rect(56,143+bob,73,3,'#fff1f5')}
-    // blusa / camada
-    if(state.top==='jacket'){rect(69,99+bob,51,39,'#72b7d9');rect(63,107+bob,12,38,'#92cde6');rect(113,107+bob,12,38,'#92cde6');rect(82,100+bob,25,37,'#e84e9a');rect(87,105+bob,15,5,'#f37db7');rect(82,128+bob,25,4,'#c93b84')}
+    // Blusas e jaqueta preservam o look inicial azul e rosa.
+    if(state.top==='jacket'){rect(69,99+bob,51,39,'#72b7d9');rect(63,107+bob,12,38,'#92cde6');rect(113,107+bob,12,38,'#92cde6');rect(82,100+bob,25,37,'#e84e9a');rect(85,102+bob,5,6,'#ffc6dc');rect(99,102+bob,5,6,'#ffc6dc');rect(87,110+bob,3,3,'#fff0c9');rect(87,120+bob,3,3,'#fff0c9');rect(82,128+bob,25,4,'#c93b84')}
     if(state.top==='sweater'){rect(68,100+bob,57,42,'#f0b47e');rect(62,109+bob,12,35,'#e8a36e');rect(116,109+bob,12,35,'#e8a36e');rect(82,108+bob,29,5,'#fff0c8');rect(89,119+bob,15,5,'#d88966')}
     if(state.top==='hoodie'){rect(66,101+bob,60,43,'#906eb0');rect(59,111+bob,13,35,'#80609d');rect(119,111+bob,13,35,'#80609d');rect(80,101+bob,32,17,'#6b508a');rect(85,112+bob,20,4,'#e6b1cf')}
     if(state.top==='raincoat'){rect(67,99+bob,58,46,'#e2b84e');rect(60,108+bob,13,38,'#d9aa3b');rect(118,108+bob,13,38,'#d9aa3b');rect(83,101+bob,26,43,'#f7dd77');rect(87,111+bob,18,4,'#9a7650')}
-    // braços e mãos sobre as roupas
-    rect(57,117+bob,10,27,'#f8dfca');rect(123,117+bob,10,27,'#f8dfca');rect(54,138+bob,14,8,'#f8dfca');rect(122,138+bob,14,8,'#f8dfca');
-    // sapatos
+    // Braços e mãos em pele clara, com as mangas por cima dos ombros.
+    rect(57,117+bob,10,27,skin);rect(123,117+bob,10,27,skin);rect(54,138+bob,14,8,skin);rect(122,138+bob,14,8,skin);rect(56,139+bob,5,3,skinLight);rect(124,139+bob,5,3,skinLight);
+    // Sapatos combináveis.
     if(state.shoes==='boots'){rect(67,198+bob,22,10,'#292d3b');rect(99,198+bob,22,10,'#292d3b');rect(70,195+bob,16,6,'#5e80a0');rect(102,195+bob,16,6,'#5e80a0')}
     if(state.shoes==='sneakers'){rect(66,198+bob,25,8,'#fff');rect(98,198+bob,25,8,'#fff');rect(70,195+bob,16,5,'#e85d79');rect(102,195+bob,16,5,'#e85d79')}
     if(state.shoes==='maryjanes'){rect(67,198+bob,22,9,'#8e4e64');rect(100,198+bob,22,9,'#8e4e64');rect(72,197+bob,14,3,'#f6d16e');rect(105,197+bob,14,3,'#f6d16e')}
-    // detalhes e acessórios
-    if(state.accessory==='bow'){rect(57,31+bob,12,10,'#7eb8db');rect(108,31+bob,12,10,'#7eb8db');rect(67,34+bob,42,6,'#5794bd');rect(82,31+bob,12,12,'#9ed5ed')}
+    // Acessórios continuam componíveis sobre o cabelo detalhado.
+    if(state.accessory==='bow'){rect(64,31+bob,18,12,'#4f87ad');rect(104,31+bob,18,12,'#4f87ad');rect(68,33+bob,10,7,'#7eb8db');rect(108,33+bob,10,7,'#7eb8db');rect(80,34+bob,26,8,'#5794bd');rect(85,32+bob,13,12,'#9ed5ed');rect(69,33+bob,4,3,'#d8f2fa');rect(111,33+bob,4,3,'#d8f2fa')}
     if(state.accessory==='flower'){rect(110,39+bob,5,5,'#f2bd52');rect(106,35+bob,5,5,'#e86b7e');rect(114,35+bob,5,5,'#e86b7e');rect(110,31+bob,5,5,'#e86b7e')}
     if(state.accessory==='headphones'){rect(60,48+bob,5,30,'#e44974');rect(115,48+bob,5,30,'#e44974');rect(64,43+bob,52,5,'#e44974');rect(57,73+bob,10,12,'#e44974');rect(113,73+bob,10,12,'#e44974')}
     if(state.accessory==='none'){rect(76,39+bob,5,4,hair);rect(99,39+bob,5,4,hair)}
